@@ -841,6 +841,14 @@
             min-height: 0;
             overflow: hidden;
         }
+
+        .chat-interaction-area .section-control-btn {
+            position: absolute !important;
+            top: 20px !important;
+            right: 40px !important;
+            z-index: 200 !important;
+        }
+
         .chat-messages { 
             flex: 1; 
             overflow-y: auto; 
@@ -1135,6 +1143,10 @@
         .key-topics-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
         .key-topic-pill { background: var(--container-bg-light); border: 1px solid var(--border-color); color: var(--text-light); padding: 5px 12px; border-radius: 15px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
         .key-topic-pill:hover { background: var(--primary-blue); color: var(--text-dark); border-color: var(--primary-blue); }
+        .urgent-meeting-highlight { background: linear-gradient(135deg, rgba(245, 150, 32, 0.3) 0%, rgba(245, 150, 32, 0.15) 100%); border: 3px solid var(--primary-orange); border-radius: 12px; padding: 18px; margin: 15px 0; box-shadow: 0 0 5px rgba(245, 150, 32, 0.2), 0 2px 8px rgba(245, 150, 32, 0.1); position: relative; overflow: hidden; }
+        @keyframes pulseUrgent { 0%, 100% { box-shadow: 0 0 5px rgba(245, 150, 32, 0.2), 0 2px 8px rgba(245, 150, 32, 0.1); } 50% { box-shadow: 0 0 8px rgba(245, 150, 32, 0.3), 0 2px 10px rgba(245, 150, 32, 0.15); } }
+        .urgent-meeting-highlight h4 { color: var(--primary-orange) !important; border-bottom: 2px solid var(--primary-orange) !important; margin-top: 0 !important; font-size: 1.2rem !important; text-shadow: none; }
+        .urgent-meeting-highlight p { color: var(--text-light); font-size: 0.95rem; line-height: 1.6; }
 
         .typing-indicator { display: flex; align-items: center; }
         .typing-indicator span { height: 8px; width: 8px; margin: 0 2px; background-color: var(--primary-blue); border-radius: 50%; display: inline-block; animation: bounce 1.4s infinite ease-in-out both; }
@@ -1339,11 +1351,22 @@
         .month-calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
+            gap: 3px;
             margin-top: 15px;
             flex-grow: 1;
             min-height: 0;
-            grid-template-rows: auto repeat(6, 1fr); /* Header row + 6 weeks */
+            grid-auto-rows: minmax(45px, auto);
+            overflow-y: auto;
+            max-height: calc(100vh - 250px);
+        }
+
+        .month-calendar-grid::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .month-calendar-grid::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 4px;
         }
 
         .month-day-header {
@@ -1364,7 +1387,7 @@
         .month-day-cell {
             border: 1px solid var(--border-color);
             border-radius: 5px;
-            padding: 2px 4px;
+            padding: 1px 2px;
             background: var(--container-bg-light);
             cursor: pointer;
             transition: all 0.3s;
@@ -1372,7 +1395,8 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            min-height: 40px;
+            min-height: 45px;
+            height: auto;
         }
 
         .month-day-cell:hover {
@@ -1391,34 +1415,58 @@
             box-shadow: 0 0 15px rgba(0, 169, 157, 0.3);
         }
 
-        .month-day-cell.other-month,
-        .month-day-cell.disabled-day {
+        .month-day-cell.other-month {
             opacity: 0.3;
             pointer-events: none;
             background: transparent;
         }
 
+        .month-day-cell.disabled-day {
+            opacity: 0.4;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .month-day-cell.disabled-day .month-day-number {
+            opacity: 0.5;
+        }
+
+        .month-day-cell.disabled-day .month-event-dot {
+            cursor: pointer;
+        }
+
         .month-day-number {
             font-weight: 600;
-            font-size: 0.75rem;
-            margin-bottom: 2px;
+            font-size: 0.7rem;
+            margin-bottom: 1px;
             flex-shrink: 0;
+            line-height: 1;
         }
 
         .month-day-events {
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 1px;
             flex-grow: 1;
             overflow: hidden;
+            min-height: 0;
+        }
+
+        .month-day-events::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .month-day-events::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 2px;
         }
 
         .month-event-dot {
             width: 100%;
-            min-height: 12px;
+            min-height: 10px;
+            max-height: 12px;
             background: var(--primary-blue);
             border-radius: 2px;
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -1427,10 +1475,42 @@
             align-items: center;
             padding: 1px 3px;
             cursor: pointer;
+            color: var(--text-dark);
+            font-weight: 500;
+            gap: 3px;
+            flex-shrink: 0;
+            line-height: 1.1;
         }
 
         .month-event-dot.milestone {
             background: #ffc107;
+            color: #000;
+        }
+
+        .month-event-dot.past-event {
+            opacity: 0.4;
+            background: rgba(128, 128, 128, 0.5);
+        }
+
+        .month-event-dot.past-event.milestone {
+            background: rgba(255, 193, 7, 0.3);
+        }
+
+        .month-event-dot .event-time {
+            font-weight: 600;
+            flex-shrink: 0;
+            font-size: 0.5rem;
+            opacity: 0.9;
+            line-height: 1;
+        }
+
+        .month-event-dot .event-title-text {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 0.5rem;
+            line-height: 1.1;
         }
 
         .today-header {
@@ -1455,10 +1535,28 @@
         }
         .desktop-calendar { display: block; }
         .mobile-calendar { display: none; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; flex: 1; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; flex: 1; overflow-y: auto; max-height: calc(100vh - 250px); }
+        
+        .calendar-grid::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .calendar-grid::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 4px;
+        }
         .day-column { border-right: 1px solid var(--border-color); padding: 5px; }
         .day-column:last-child { border-right: none; }
         .day-column.weekend { background-color: rgba(0, 0, 0, 0.2); border-radius: 5px; }
+        .day-column.past-day { opacity: 0.4; }
+        .day-column.past-day .day-header { opacity: 0.6; }
+        .event.past-event { opacity: 0.5; background: rgba(128, 128, 128, 0.3) !important; }
+        .event.past-event .event-time, .event.past-event .event-title { opacity: 0.7; }
+        #day-meetings-list { max-height: calc(80vh - 150px); overflow-y: auto; margin-top: 20px; padding-right: 10px; }
+        #day-meetings-list::-webkit-scrollbar { width: 8px; }
+        #day-meetings-list::-webkit-scrollbar-thumb { background: var(--primary-blue); border-radius: 4px; }
+        #day-meetings-list .event { transition: all 0.2s; }
+        #day-meetings-list .event:hover { transform: translateX(5px); }
         .day-header {
             text-align: center;
             font-weight: 600;
@@ -2687,6 +2785,10 @@
                 </div>
                 <!-- Chat Interaction Area -->
                 <div class="chat-interaction-area">
+                    <button class="section-control-btn" id="centerSectionToggle" title="Maximize"
+                        style="position: absolute; top: 20px; right: 20px; background: linear-gradient(135deg, rgba(20, 65, 90, 0.95), rgba(20, 130, 135, 0.95)); border: 2px solid #F59620; color: white; width: 36px; height: 36px; border-radius: 8px; cursor: pointer; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; z-index: 200; backdrop-filter: blur(20px); box-shadow: 0 4px 15px rgba(245, 150, 30, 0.3); transition: all 0.3s ease;">
+                        <i class="fas fa-expand" style="pointer-events: none;"></i>
+                    </button>
                     <div class="chat-messages" id="chatMessages">
                         <div class="message-bubble agent">
                             <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Hakim" alt="Agent Avatar" class="avatar" data-persona-avatar="">
@@ -2940,6 +3042,12 @@
                 <div class="event event-milestone" data-event-title="Milestone: Non-Profit Portal Launch" data-event-time="EOD" data-event-details="Official launch of the new national portal for non-profit organizations. Review launch communications." data-topic="non-profit" data-date="2025-10-20"></div>
                 <div class="event" data-event-title="Partnership MoU Signing" data-event-time="10:00 AM" data-event-details="Ceremony for signing the Memorandum of Understanding with key private sector partners." data-topic="strategic-partnerships" data-date="2025-10-21"></div>
                 <div class="event" data-event-title="Community Empowerment Briefing" data-event-time="02:00 PM" data-event-details="Briefing on the results of the recent community empowerment programs and future plans." data-topic="empowerment" data-date="2025-10-23"></div>
+                <div class="event" data-event-title="Evening Strategy Session" data-event-time="09:00 PM" data-event-details="Critical evening strategy session to review Q4 objectives and finalize key decisions." data-topic="strategic-partnerships" data-date="2025-11-25"></div>
+                <div class="event" data-event-title="Executive Review Meeting" data-event-time="10:00 PM" data-event-details="Executive review meeting with leadership team to discuss upcoming initiatives." data-topic="labor-market" data-date="2025-11-25"></div>
+                <div class="event" data-event-title="Late Night Planning Session" data-event-time="11:00 PM" data-event-details="Late night planning session for next quarter's strategic roadmap." data-topic="empowerment" data-date="2025-11-25"></div>
+                <div class="event" data-event-title="Afternoon Team Sync" data-event-time="01:00 PM" data-event-details="Team synchronization meeting to align on current projects and priorities." data-topic="strategic-partnerships" data-date="2025-11-26"></div>
+                <div class="event" data-event-title="Quarterly Review Meeting" data-event-time="04:00 PM" data-event-details="Quarterly performance review and strategic planning discussion with key stakeholders." data-topic="labor-market" data-date="2025-11-26"></div>
+                <div class="event" data-event-title="Evening Board Meeting" data-event-time="08:00 PM" data-event-details="Evening board meeting to review strategic initiatives and make key decisions." data-topic="empowerment" data-date="2025-11-26"></div>
             </div>
         </div>
 
@@ -2988,6 +3096,13 @@
                     <h3 class="tool-title">AI Risk Assessment</h3>
                     <p class="tool-description">Identifies potential risks in projects, policies, or operational areas by analyzing historical data and external factors, providing early warnings.</p>
                     <button class="tool-action-btn" data-tool-action="risk"><i class="fas fa-exclamation-triangle"></i> Assess Risk</button>
+                </div>
+                <!-- Tool Card 7: Strategic Focus Area Advisor -->
+                <div class="tool-card">
+                    <div class="tool-icon"><i class="fas fa-user-tie"></i></div>
+                    <h3 class="tool-title">Strategic Focus Area Advisor</h3>
+                    <p class="tool-description">Provides in-depth analysis, recommendations, and guidance on all priority focus areas to support informed leadership decisions.</p>
+                    <button class="tool-action-btn" data-tool-action="advice"><i class="fas fa-lightbulb"></i> Strategic Guide</button>
                 </div>
             </div>
         </div>
@@ -3050,6 +3165,16 @@
             <div class="event-actions">
                 <button id="summarize-event-btn"><i class="fas fa-align-left"></i> Summarize</button>
                 <button id="prepare-event-btn"><i class="fas fa-clipboard-check"></i> Consult for Preparation</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="dayMeetingsModal" class="modal">
+        <div class="modal-content" style="max-width: 600px; max-height: 80vh;">
+            <span class="close-button">×</span>
+            <h2 id="day-meetings-title">Meetings for Date</h2>
+            <div id="day-meetings-list" style="max-height: calc(80vh - 150px); overflow-y: auto; margin-top: 20px;">
+                <!-- Meetings will be populated here -->
             </div>
         </div>
     </div>
@@ -4375,9 +4500,9 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
 
                 if (upcomingEvents.length > 0) { /* ... populate with next/later events ... */
                     const nextEvent = upcomingEvents[0]; const laterEvents = upcomingEvents.slice(1);
-                    summaryContent.innerHTML = `<h4>Next Up: ${nextEvent.dataset.eventTitle} (${nextEvent.dataset.eventTime})</h4> <p>${nextEvent.dataset.eventDetails}</p> <div class="key-topics-pills"><div class="key-topic-pill" data-topic="Key Objectives">Key Objectives</div><div class="key-topic-pill" data-topic="Attendees">Attendees</div><div class="key-topic-pill" data-topic="Required Actions">Required Actions</div></div>`;
+                    // Wrap the most upcoming meeting in urgent highlight
+                    summaryContent.innerHTML = `<div class="urgent-meeting-highlight"><h4>Next Up: ${nextEvent.dataset.eventTitle} (${nextEvent.dataset.eventTime})</h4> <p>${nextEvent.dataset.eventDetails}</p></div>`;
                     if (laterEvents.length > 0) { summaryContent.innerHTML += '<h4>Later Today</h4><ul>'; laterEvents.forEach(eventEl => { summaryContent.innerHTML += `<li><strong>${eventEl.dataset.eventTitle}</strong> (${eventEl.dataset.eventTime})</li>`; }); summaryContent.innerHTML += '</ul>'; }
-                    summaryContent.querySelectorAll('.key-topic-pill').forEach(pill => { pill.addEventListener('click', () => { const prompt = `Elaborate on the topic "${pill.dataset.topic}" regarding the "${nextEvent.dataset.eventTitle}".`; switchToAgentAndSendPrompt(prompt); }); });
                 } else { /* ... show completed / look ahead ... */
                      summaryContent.innerHTML = `<h4>Today's Agenda</h4><p>No further meetings or milestones scheduled for today.</p>`;
                     const tomorrow = new Date(now); tomorrow.setDate(now.getDate() + 1); const tomorrowStr = tomorrow.toISOString().split('T')[0]; const tomorrowsEvents = allEvents.filter(eventEl => eventEl.dataset.date === tomorrowStr); tomorrowsEvents.sort((a, b) => { /* Add sorting if needed */ });
@@ -4414,26 +4539,23 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
                             if (view === 'month') { 
                                 // When switching to month view from week view, sync month to current week's month
                                 if (previousView === 'week') {
-                                    // Set month to the month of the current week
-                                    currentMonth = new Date(currentWeekStart.getFullYear(), currentWeekStart.getMonth(), 1);
+                                    // Set month to the month of the current week (use the middle day of the week)
+                                    const weekMiddleDay = new Date(currentWeekStart);
+                                    weekMiddleDay.setDate(currentWeekStart.getDate() + 3);
+                                    currentMonth = new Date(weekMiddleDay.getFullYear(), weekMiddleDay.getMonth(), 1);
                                 }
                                 renderDesktopMonthCalendar(); 
                             }
                             if (view === 'today') { renderTodayView(); updateWeekHeader(); }
                             if (view === 'week') { 
-                                // When switching to week view from month view, sync week to current month
+                                // When switching to week view from month view, always go to current week
                                 if (previousView === 'month') {
-                                    // Set week start to the first Sunday of the current month (or first day if month starts on Sunday)
-                                    const firstDayOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
-                                    const dayOfWeek = firstDayOfMonth.getDay();
-                                    
-                                    // If month doesn't start on Sunday, go to the previous Sunday
-                                    if (dayOfWeek !== 0) {
-                                        const daysToSubtract = dayOfWeek;
-                                        firstDayOfMonth.setDate(firstDayOfMonth.getDate() - daysToSubtract);
-                                    }
-                                    
-                                    currentWeekStart = new Date(firstDayOfMonth);
+                                    // Reset to current week
+                                    const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                                    const day = todayDateOnly.getDay();
+                                    const diff = todayDateOnly.getDate() - day;
+                                    currentWeekStart = new Date(todayDateOnly);
+                                    currentWeekStart.setDate(diff);
                                     currentWeekStart.setHours(0, 0, 0, 0);
                                 }
                                 renderWeekView(); 
@@ -4441,19 +4563,14 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
                         } else {
                             // Mobile calendar view toggle
                             if (view === 'week') { 
-                                // When switching to week view from month view, sync week to current month
+                                // When switching to week view from month view, always go to current week
                                 if (previousView === 'month') {
-                                    // Set week start to the first Sunday of the current month (or first day if month starts on Sunday)
-                                    const firstDayOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
-                                    const dayOfWeek = firstDayOfMonth.getDay();
-                                    
-                                    // If month doesn't start on Sunday, go to the previous Sunday
-                                    if (dayOfWeek !== 0) {
-                                        const daysToSubtract = dayOfWeek;
-                                        firstDayOfMonth.setDate(firstDayOfMonth.getDate() - daysToSubtract);
-                                    }
-                                    
-                                    currentWeekStart = new Date(firstDayOfMonth);
+                                    // Reset to current week
+                                    const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                                    const day = todayDateOnly.getDay();
+                                    const diff = todayDateOnly.getDate() - day;
+                                    currentWeekStart = new Date(todayDateOnly);
+                                    currentWeekStart.setDate(diff);
                                     currentWeekStart.setHours(0, 0, 0, 0);
                                 }
                                 initMobileCalendar(); 
@@ -4462,8 +4579,10 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
                             if (view === 'month') { 
                                 // When switching to month view from week view, sync month to current week's month
                                 if (previousView === 'week') {
-                                    // Set month to the month of the current week
-                                    currentMonth = new Date(currentWeekStart.getFullYear(), currentWeekStart.getMonth(), 1);
+                                    // Set month to the month of the current week (use the middle day of the week)
+                                    const weekMiddleDay = new Date(currentWeekStart);
+                                    weekMiddleDay.setDate(currentWeekStart.getDate() + 3);
+                                    currentMonth = new Date(weekMiddleDay.getFullYear(), weekMiddleDay.getMonth(), 1);
                                 }
                                 renderDesktopMonthCalendar(); 
                             }
@@ -4507,15 +4626,153 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
                 if (!monthGrid) return;
                 const allEvents = Array.from(document.querySelectorAll('.event[data-date]'));
                 const eventsByDate = new Map();
-                allEvents.forEach(e => { const date = e.dataset.date; if (!eventsByDate.has(date)) { eventsByDate.set(date, []); } eventsByDate.get(date).push(e); });
+                const seenEvents = new Set(); // Track unique events to prevent duplicates
+                allEvents.forEach(e => { 
+                    const date = e.dataset.date;
+                    const eventKey = `${date}-${e.dataset.eventTitle}-${e.dataset.eventTime}`;
+                    // Only add if we haven't seen this exact event before
+                    if (!seenEvents.has(eventKey)) {
+                        seenEvents.add(eventKey);
+                        if (!eventsByDate.has(date)) { eventsByDate.set(date, []); }
+                        eventsByDate.get(date).push(e);
+                    }
+                });
                 const year = currentMonth.getFullYear(); const month = currentMonth.getMonth();
                 const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
                 const firstDayOfMonth = new Date(year, month, 1); const daysInMonth = new Date(year, month + 1, 0).getDate(); const startingDay = firstDayOfMonth.getDay();
                 monthGrid.innerHTML = '';
                 ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach((day, index) => { const isWeekend = index === 5 || index === 6; monthGrid.innerHTML += `<div class="month-day-header ${isWeekend ? 'weekend' : ''}">${day}</div>`; });
                 for (let i = 0; i < startingDay; i++) { monthGrid.innerHTML += '<div class="month-day-cell other-month"></div>'; }
-                for (let day = 1; day <= daysInMonth; day++) { const date = new Date(year, month, day); const dayOfWeek = date.getDay(); const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`; const isToday = year === today.getFullYear() && month === today.getMonth() && day === today.getDate(); const isPast = date < todayDateOnly; const isWeekend = dayOfWeek === 5 || dayOfWeek === 6; let cellClasses = 'month-day-cell'; if (isToday) cellClasses += ' today'; if (isPast) cellClasses += ' disabled-day'; if (isWeekend) cellClasses += ' weekend'; let cellHtml = `<div class="${cellClasses}" data-date="${dateStr}"><div class="month-day-number">${day}</div><div class="month-day-events">`; if (eventsByDate.has(dateStr)) { eventsByDate.get(dateStr).forEach(eventEl => { const isMilestone = eventEl.classList.contains('event-milestone'); cellHtml += `<div class="month-event-dot ${isMilestone ? 'milestone' : ''}"></div>`; }); } cellHtml += `</div></div>`; monthGrid.innerHTML += cellHtml; }
-                 monthGrid.querySelectorAll('.month-day-cell:not(.disabled-day, .other-month)').forEach(cell => { const dateStr = cell.dataset.date; cell.addEventListener('click', () => { if (eventsByDate.has(dateStr)) { const firstEvent = eventsByDate.get(dateStr)[0]; openEventModal(firstEvent.dataset.eventTitle, firstEvent.dataset.eventTime, firstEvent.dataset.eventDetails, dateStr, firstEvent); } else { openDayActionModal(dateStr); } }); });
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const date = new Date(year, month, day);
+                    const dayOfWeek = date.getDay();
+                    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const isToday = year === today.getFullYear() && month === today.getMonth() && day === today.getDate();
+                    const isPast = date < todayDateOnly;
+                    const isWeekend = dayOfWeek === 5 || dayOfWeek === 6;
+                    let cellClasses = 'month-day-cell';
+                    if (isToday) cellClasses += ' today';
+                    if (isPast) cellClasses += ' disabled-day';
+                    if (isWeekend) cellClasses += ' weekend';
+                    
+                    const eventsForDay = eventsByDate.has(dateStr) ? eventsByDate.get(dateStr) : [];
+                    
+                    let cellHtml = `<div class="${cellClasses}" data-date="${dateStr}"><div class="month-day-number">${day}</div><div class="month-day-events">`;
+                    if (eventsForDay.length > 0) {
+                        eventsForDay.forEach(eventEl => {
+                            const isMilestone = eventEl.classList.contains('event-milestone') || eventEl.dataset.eventTime === 'EOD';
+                            const eventTitle = eventEl.dataset.eventTitle || '';
+                            const eventTime = eventEl.dataset.eventTime || '';
+                            const pastClass = isPast ? ' past-event' : '';
+                            cellHtml += `<div class="month-event-dot ${isMilestone ? 'milestone' : ''}${pastClass}" title="${eventTitle} - ${eventTime}"><span class="event-time">${eventTime}</span><span class="event-title-text">${eventTitle}</span></div>`;
+                        });
+                    }
+                    cellHtml += `</div></div>`;
+                    monthGrid.innerHTML += cellHtml;
+                }
+                // Add click handlers - allow clicks on past days only if they have events (for summarize)
+                monthGrid.querySelectorAll('.month-day-cell:not(.other-month)').forEach(cell => {
+                    const dateStr = cell.dataset.date;
+                    const isPast = cell.classList.contains('disabled-day');
+                    cell.addEventListener('click', (e) => {
+                        // Don't trigger if clicking directly on an event dot
+                        if (e.target.closest('.month-event-dot')) {
+                            const eventDot = e.target.closest('.month-event-dot');
+                            const eventTime = eventDot.querySelector('.event-time')?.textContent || '';
+                            const eventTitle = eventDot.querySelector('.event-title-text')?.textContent || '';
+                            // Find the matching event
+                            const matchingEvent = Array.from(document.querySelectorAll('.event[data-date]')).find(e => 
+                                e.dataset.date === dateStr && 
+                                e.dataset.eventTime === eventTime && 
+                                e.dataset.eventTitle === eventTitle
+                            );
+                            if (matchingEvent) {
+                                openEventModal(matchingEvent.dataset.eventTitle, matchingEvent.dataset.eventTime, matchingEvent.dataset.eventDetails, dateStr, matchingEvent);
+                            }
+                            return;
+                        }
+                        
+                        if (eventsByDate.has(dateStr)) {
+                            // Open scrollable list of all meetings for this day
+                            openDayMeetingsModal(dateStr);
+                        } else if (!isPast) {
+                            openDayActionModal(dateStr);
+                        }
+                    });
+                });
+            }
+
+            // Day Meetings Modal - Show all meetings for a day in a scrollable list
+            function openDayMeetingsModal(dateStr) {
+                const dayMeetingsModal = document.getElementById('dayMeetingsModal');
+                const titleEl = document.getElementById('day-meetings-title');
+                const listEl = document.getElementById('day-meetings-list');
+                
+                if (!dayMeetingsModal || !titleEl || !listEl) return;
+                
+                const date = new Date(dateStr + 'T00:00:00');
+                const dateFormatted = date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+                titleEl.textContent = `Meetings for ${dateFormatted}`;
+                
+                // Get all events for this date
+                const allEvents = Array.from(document.querySelectorAll('.event[data-date]'));
+                const dayEvents = allEvents.filter(e => e.dataset.date === dateStr);
+                
+                // Remove duplicates
+                const seenEvents = new Set();
+                const uniqueEvents = [];
+                dayEvents.forEach(eventEl => {
+                    const eventKey = `${eventEl.dataset.eventTitle}-${eventEl.dataset.eventTime}`;
+                    if (!seenEvents.has(eventKey)) {
+                        seenEvents.add(eventKey);
+                        uniqueEvents.push(eventEl);
+                    }
+                });
+                
+                // Sort by time
+                uniqueEvents.sort((a, b) => {
+                    const timeStrToMinutes = (timeStr) => {
+                        if (timeStr === 'EOD') return 17 * 60;
+                        const parts = timeStr.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+                        if (parts) {
+                            let hours = parseInt(parts[1]);
+                            const minutes = parseInt(parts[2]);
+                            const isPM = parts[3] && parts[3].toUpperCase() === 'PM';
+                            if (isPM && hours !== 12) hours += 12;
+                            if (!isPM && hours === 12) hours = 0;
+                            return hours * 60 + minutes;
+                        }
+                        return 24 * 60;
+                    };
+                    return timeStrToMinutes(a.dataset.eventTime) - timeStrToMinutes(b.dataset.eventTime);
+                });
+                
+                listEl.innerHTML = '';
+                if (uniqueEvents.length === 0) {
+                    listEl.innerHTML = '<p style="opacity: 0.7; text-align: center; padding: 20px;">No meetings scheduled for this day.</p>';
+                } else {
+                    uniqueEvents.forEach(eventEl => {
+                        const eventDiv = document.createElement('div');
+                        eventDiv.className = 'event';
+                        if (eventEl.classList.contains('event-milestone')) {
+                            eventDiv.classList.add('event-milestone');
+                        }
+                        eventDiv.innerHTML = `
+                            <div class="event-time">${eventEl.dataset.eventTime}</div>
+                            <div class="event-title">${eventEl.dataset.eventTitle}</div>
+                            <div class="event-details" style="font-size: 0.85rem; opacity: 0.8; margin-top: 5px;">${eventEl.dataset.eventDetails}</div>
+                        `;
+                        eventDiv.style.cursor = 'pointer';
+                        eventDiv.style.marginBottom = '12px';
+                        eventDiv.addEventListener('click', () => {
+                            closeModal(dayMeetingsModal);
+                            openEventModal(eventEl.dataset.eventTitle, eventEl.dataset.eventTime, eventEl.dataset.eventDetails, dateStr, eventEl);
+                        });
+                        listEl.appendChild(eventDiv);
+                    });
+                }
+                
+                openModal(dayMeetingsModal);
             }
 
             // Day Action Modal
@@ -4544,13 +4801,35 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
                  const todaysEvents = Array.from(document.querySelectorAll(`.event[data-date="${todayStr}"]`)); 
                  todayList.innerHTML = ''; 
                  if (todaysEvents.length > 0) { 
+                     // Remove duplicates by tracking unique event titles and times
+                     const seenEvents = new Set();
+                     const uniqueEvents = [];
                      todaysEvents.forEach(eventEl => { 
-                         const eventClone = eventEl.cloneNode(true); 
-                         eventClone.addEventListener('click', () => { 
-                             const dateStr = eventClone.dataset.date;
-                             openEventModal(eventClone.dataset.eventTitle, eventClone.dataset.eventTime, eventClone.dataset.eventDetails, dateStr, eventClone); 
-                         }); 
-                         todayList.appendChild(eventClone); 
+                         const eventKey = `${eventEl.dataset.eventTitle}-${eventEl.dataset.eventTime}`;
+                         if (!seenEvents.has(eventKey)) {
+                             seenEvents.add(eventKey);
+                             uniqueEvents.push(eventEl);
+                         }
+                     });
+                     
+                    uniqueEvents.forEach(eventEl => { 
+                        const eventDiv = document.createElement('div');
+                        eventDiv.className = 'event';
+                        if (eventEl.classList.contains('event-milestone')) {
+                            eventDiv.classList.add('event-milestone');
+                        }
+                        
+                        // Create visible event rectangle with title and time
+                        eventDiv.innerHTML = `
+                            <div class="event-time">${eventEl.dataset.eventTime}</div>
+                            <div class="event-title">${eventEl.dataset.eventTitle}</div>
+                        `;
+                        
+                        eventDiv.addEventListener('click', () => { 
+                            const dateStr = eventEl.dataset.date;
+                            openEventModal(eventEl.dataset.eventTitle, eventEl.dataset.eventTime, eventEl.dataset.eventDetails, dateStr, eventEl); 
+                        }); 
+                        todayList.appendChild(eventDiv); 
                      }); 
                  } else { 
                      todayList.innerHTML = '<p style="opacity: 0.7; text-align: center; padding: 20px;">No events scheduled for today.</p>'; 
@@ -4568,12 +4847,18 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
                 // Get all events
                 const allEvents = Array.from(document.querySelectorAll('.event[data-date]'));
                 const eventsByDate = new Map();
+                const seenEvents = new Set(); // Track unique events to prevent duplicates
                 allEvents.forEach(e => {
                     const date = e.dataset.date;
+                    const eventKey = `${date}-${e.dataset.eventTitle}-${e.dataset.eventTime}`;
+                    // Only add if we haven't seen this exact event before
+                    if (!seenEvents.has(eventKey)) {
+                        seenEvents.add(eventKey);
                     if (!eventsByDate.has(date)) {
                         eventsByDate.set(date, []);
                     }
                     eventsByDate.get(date).push(e);
+                    }
                 });
                 
                 // Clear and rebuild the week grid
@@ -4600,14 +4885,13 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
                     const todayStr = `${todayYear}-${todayMonth}-${todayDay}`;
                     const isToday = dateStr === todayStr;
                     
-                    // Check if this week is in the past (check if the week's last day is before today)
-                    const weekEndDate = new Date(currentWeekStart);
-                    weekEndDate.setDate(currentWeekStart.getDate() + 6);
+                    // Check if this day is in the past
                     const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-                    const isPastWeek = weekEndDate < todayDateOnly;
+                    const currentDateOnly = new Date(year, parseInt(month) - 1, parseInt(day));
+                    const isPast = currentDateOnly < todayDateOnly;
                     
                     const dayColumn = document.createElement('div');
-                    dayColumn.className = `day-column${isWeekend ? ' weekend' : ''}${isToday ? ' today' : ''}${isPastWeek ? ' past-week' : ''}`;
+                    dayColumn.className = `day-column${isWeekend ? ' weekend' : ''}${isToday ? ' today' : ''}${isPast ? ' past-day' : ''}`;
                     
                     const dayHeader = document.createElement('div');
                     dayHeader.className = 'day-header';
@@ -4621,7 +4905,7 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
                     if (eventsByDate.has(dateStr)) {
                         eventsByDate.get(dateStr).forEach(eventEl => {
                             const eventDiv = document.createElement('div');
-                            eventDiv.className = 'event';
+                            eventDiv.className = `event${isPast ? ' past-event' : ''}`;
                             if (eventEl.classList.contains('event-milestone')) {
                                 eventDiv.classList.add('event-milestone');
                             }
@@ -4639,19 +4923,18 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
                         });
                     }
                     
-                    // Add click handler to day column for booking meetings on empty days
-                    const isPast = new Date(dateStr + 'T00:00:00') < todayDateOnly;
+                    // Add click handler to day column - allow clicks on past days only if they have events (for summarize)
                     if (!isPast || eventsByDate.has(dateStr)) {
                         dayColumn.style.cursor = 'pointer';
                         dayColumn.addEventListener('click', (e) => {
                             // Only trigger if clicking on the column itself, not on an event
                             if (e.target === dayColumn || e.target === dayHeader || e.target.closest('.day-header')) {
                                 if (eventsByDate.has(dateStr)) {
-                                    // If there are events, open the first one
+                                    // If there are events, open the first one (for summarize)
                                     const firstEvent = eventsByDate.get(dateStr)[0];
                                     openEventModal(firstEvent.dataset.eventTitle, firstEvent.dataset.eventTime, firstEvent.dataset.eventDetails, dateStr, firstEvent);
-                                } else {
-                                    // If no events, open day action modal to book a meeting
+                                } else if (!isPast) {
+                                    // If no events and not past, open day action modal to book a meeting
                                     openDayActionModal(dateStr);
                                 }
                             }
@@ -5473,6 +5756,11 @@ Keep it brief and executive-level.`;
                             // Or potentially Layla if focused on data-driven risk: targetPersonaId = 'layla';
                             prompt = `I need to use the ${toolTitle} tool. Can you help me assess risks related to [Specify Area/Project]?`;
                             break;
+                        case 'advice': 
+                            targetPersonaId = 'nouf'; // Executive Agent (strategic risk)
+                            // Or potentially Layla if focused on data-driven risk: targetPersonaId = 'layla';
+                            prompt = `I need strategic guidance using the ${toolTitle}. Please analyze each of the provided focus areas and give tailored insights and recommendations for every one of them.`;
+                            break;
                         default:
                              prompt = `Tell me more about the "${toolTitle}" tool.`;
                     }
@@ -5602,12 +5890,29 @@ Keep it brief and executive-level.`;
                     const activeView = document.querySelector('.view-btn.active, .mobile-view-btn.active');
                     const view = activeView ? activeView.dataset.view : 'week';
                     const isMonthView = view === 'month';
+                    const isTodayView = view === 'today';
                     
-                    // Week buttons - disabled in month view
+                    // Week buttons - disabled in month view and today view
                     const weekButtons = [prevWeekBtn, nextWeekBtn, mobilePrevWeekBtn, mobileNextWeekBtn];
                     weekButtons.forEach(btn => {
                         if (btn) {
-                            if (isMonthView) {
+                            if (isMonthView || isTodayView) {
+                                btn.disabled = true;
+                                btn.style.opacity = '0.4';
+                                btn.style.cursor = 'not-allowed';
+                            } else {
+                                btn.disabled = false;
+                                btn.style.opacity = '1';
+                                btn.style.cursor = 'pointer';
+                            }
+                        }
+                    });
+                    
+                    // Month buttons - disabled in today view
+                    const monthButtons = [prevMonthBtn, nextMonthBtn, mobilePrevMonthBtn, mobileNextMonthBtn];
+                    monthButtons.forEach(btn => {
+                        if (btn) {
+                            if (isTodayView) {
                                 btn.disabled = true;
                                 btn.style.opacity = '0.4';
                                 btn.style.cursor = 'not-allowed';
@@ -5740,6 +6045,106 @@ Keep it brief and executive-level.`;
                     personaDisplay.classList.toggle('expanded');
                 });
             }
+
+            // Initialize section controls (maximize button)
+            (function initSectionControls() {
+                setTimeout(function () {
+                    const centerBtn = document.getElementById('centerSectionToggle');
+                    const chatContainer = document.querySelector('.chat-section-container');
+                    const personaDisplay = document.querySelector('.persona-display');
+                    const chatArea = document.querySelector('.chat-interaction-area');
+                    const summarySection = document.querySelector('.summary-section');
+
+                    if (!centerBtn || !chatContainer || !personaDisplay || !chatArea || !summarySection) {
+                        return;
+                    }
+
+                    chatArea.style.paddingTop = '70px';
+
+                    let currentMax = null;
+
+                    centerBtn.style.pointerEvents = 'auto';
+                    centerBtn.style.cursor = 'pointer';
+                    centerBtn.style.display = 'flex';
+
+                    centerBtn.addEventListener('mouseenter', function () {
+                        this.style.background = 'linear-gradient(135deg, #F59620, #FAB414)';
+                        this.style.transform = 'translateY(-2px) scale(1.08)';
+                        this.style.boxShadow = '0 6px 25px rgba(245, 150, 30, 0.6), 0 0 0 3px rgba(245, 150, 30, 0.2)';
+                    });
+
+                    centerBtn.addEventListener('mouseleave', function () {
+                        this.style.background = 'linear-gradient(135deg, rgba(20, 65, 90, 0.95), rgba(20, 130, 135, 0.95))';
+                        this.style.transform = '';
+                        this.style.boxShadow = '0 4px 15px rgba(245, 150, 30, 0.3)';
+                    });
+
+                    function resetAll() {
+                        personaDisplay.style.display = '';
+                        chatArea.style.display = '';
+                        summarySection.style.display = '';
+                        chatContainer.style.display = '';
+                        chatContainer.style.opacity = '';
+                        chatContainer.style.pointerEvents = '';
+
+                        personaDisplay.style.flex = '';
+                        chatArea.style.flex = '';
+
+                        chatArea.style.paddingTop = '70px';
+
+                        summarySection.style.position = '';
+                        summarySection.style.width = '';
+                        summarySection.style.height = '';
+                        summarySection.style.top = '';
+                        summarySection.style.left = '';
+                        summarySection.style.right = '';
+                        summarySection.style.bottom = '';
+                        summarySection.style.zIndex = '';
+                        summarySection.style.borderRadius = '';
+                        summarySection.style.maxWidth = '';
+                        summarySection.style.maxHeight = '';
+                        summarySection.style.margin = '';
+                        summarySection.style.padding = '';
+                        summarySection.style.flex = '';
+                        summarySection.style.minWidth = '';
+
+                        centerBtn.style.position = 'absolute';
+                        centerBtn.style.top = '20px';
+                        centerBtn.style.right = '20px';
+                        centerBtn.style.zIndex = '200';
+
+                        centerBtn.querySelector('i').className = 'fas fa-expand';
+                        centerBtn.title = 'Maximize';
+
+                        currentMax = null;
+                    }
+
+                    centerBtn.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        if (currentMax === 'center') {
+                            resetAll();
+                        } else {
+                            resetAll();
+
+                            personaDisplay.style.display = 'none';
+                            chatArea.style.flex = '1';
+                            chatArea.style.paddingTop = '70px';
+                            summarySection.style.display = 'none';
+                            centerBtn.querySelector('i').className = 'fas fa-compress';
+                            centerBtn.title = 'Minimize';
+                            currentMax = 'center';
+                        }
+                    });
+
+                    document.addEventListener('keydown', function (e) {
+                        if (e.key === 'Escape' && currentMax) {
+                            resetAll();
+                        }
+                    });
+                }, 100);
+            })();
 
         });
     </script>
