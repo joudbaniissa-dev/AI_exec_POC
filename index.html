@@ -338,7 +338,7 @@
             border-radius: 20px;
             border: 1px solid var(--border-color);
             backdrop-filter: blur(20px);
-			padding: 40px 0px 0px 20px;
+			padding: 28px 0px 24px 20px; /* move content slightly up from bottom, closer to top */
 			min-width: 0;
             min-height: 0;
             max-height: calc(100vh - 220px);
@@ -388,83 +388,34 @@
             gap: 10px;
         }
         
-        /* Mode Toggle */
-        /* Mode Toggle */
         .mode-toggle-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            padding: 12px;
-            background: rgba(0, 169, 157, 0.1);
-            border-radius: 12px;
-            margin-bottom: 15px;
-            border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            margin: -4px 0 24px; /* lift status pill a bit higher, add breathing room above cards */
         }
         
-        .mode-toggle-label {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text-light);
-            opacity: 0.7;
-        }
-        
-        .mode-toggle-label.active {
-            opacity: 1;
-            color: var(--primary-blue);
+        #modeStatusLabel {
+            display: inline-block;
+            padding: 8px 18px;
+            border-radius: 999px;
+            font-size: 0.9rem;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
         }
-        
-        .mode-toggle-switch {
-            position: relative;
-            width: 60px;
-            height: 30px;
+        .mode-status-single {
+            background: rgba(0, 169, 157, 0.12);
+            border: 2px solid var(--primary-blue);
+            color: var(--primary-blue);
+            box-shadow: 0 0 5px rgba(0, 169, 157, 0.25), 0 2px 8px rgba(0, 169, 157, 0.15);
         }
-        
-        .mode-toggle-switch input {
-            display: none;
-        }
-        
-        .mode-toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.2);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 34px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .mode-toggle-slider:before {
-            position: absolute;
-            content: "1";
-            height: 22px;
-            width: 22px;
-            left: 2px;
-            bottom: 2px;
-            background-color: white;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: var(--dark-teal);
-        }
-        
-        .mode-toggle-switch input:checked + .mode-toggle-slider {
-            background: linear-gradient(135deg, var(--primary-blue), #008a7e);
-            border-color: var(--primary-blue);
-        }
-        
-        .mode-toggle-switch input:checked + .mode-toggle-slider:before {
-            transform: translateX(30px);
-            content: "✓";
-            font-size: 0.8rem;
+        .mode-status-multi {
+            background: linear-gradient(135deg, rgba(245, 150, 32, 0.3) 0%, rgba(245, 150, 32, 0.15) 100%);
+            border: 2px solid var(--primary-orange);
+            color: var(--text-dark);
+            box-shadow: 0 0 5px rgba(245, 150, 32, 0.2), 0 2px 8px rgba(245, 150, 32, 0.1);
         }
         
         /* Single Agent Mode Styles */
@@ -665,28 +616,28 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            width: 26px;
-            height: 26px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
-            border: 1px solid var(--border-color);
-            background: rgba(255, 255, 255, 0.12);
-            color: var(--primary-orange);
+            border: 1px solid var(--primary-blue);
+            background: rgba(0, 169, 157, 0.08);
+            color: var(--primary-blue);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
+            font-size: 0.75rem;
             cursor: pointer;
             transition: all 0.2s ease;
             z-index: 2;
         }
         .agent-info-btn i {
             pointer-events: none;
-            color: var(--primary-orange);
+            color: var(--primary-blue);
         }
         .agent-info-btn:hover {
-            background: var(--primary-orange);
+            background: var(--primary-blue);
             color: var(--text-dark);
-            border-color: var(--primary-orange);
+            border-color: var(--primary-blue);
             transform: scale(1.1);
         }
         .agent-info-btn:hover i {
@@ -1089,7 +1040,7 @@
             background: rgba(0, 0, 0, 0.1);
             /*margin: 0 -20px -20px -20px;*/
             padding: 15px 20px;
-            border-radius: 0 0 20px 0; /* Only bottom-right corner of chat-area */
+            border-radius: 32px; /* Curve both left and right edges */
             flex-shrink: 0;
             overflow: visible; /* Allow dropdowns to overflow */
             position: relative; /* For absolute positioned children */
@@ -4475,7 +4426,10 @@
             
             function updateModeStatusLabel() {
                 if (!modeStatusLabel) return;
-                modeStatusLabel.textContent = selectedAgents.length > 1 ? 'Multi Agent Mode' : 'Single Agent Mode';
+                const isMulti = selectedAgents.length > 1;
+                modeStatusLabel.textContent = isMulti ? 'Multi Agent Mode' : 'Single Agent Mode';
+                modeStatusLabel.classList.toggle('mode-status-multi', isMulti);
+                modeStatusLabel.classList.toggle('mode-status-single', !isMulti);
             }
             
             function updateSingleAgentDisplay(agentId) {
@@ -4760,19 +4714,21 @@
 
                 if (!summarizeBtn || !prepareBtn) return;
 
-                // Check if event is in the past
-                let isPast = false;
-                if (dateStr) {
-                    const eventDate = new Date(dateStr + 'T00:00:00');
-                    const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-                    isPast = eventDate < todayDateOnly;
-                }
+                // Check if event is in the past (date + time)
+                const isPast = dateStr ? isEventInPast(dateStr, time) : false;
 
                 // Clone and replace buttons to remove old event listeners
                 const newSummarizeBtn = summarizeBtn.cloneNode(true);
                 summarizeBtn.parentNode.replaceChild(newSummarizeBtn, summarizeBtn);
                 const newPrepareBtn = prepareBtn.cloneNode(true);
                 prepareBtn.parentNode.replaceChild(newPrepareBtn, prepareBtn);
+
+                // Summaries only for completed meetings
+                if (isPast) {
+                    newSummarizeBtn.style.display = '';
+                } else {
+                    newSummarizeBtn.style.display = 'none';
+                }
 
                 // Hide prepare button for past meetings
                 if (isPast) {
@@ -4822,42 +4778,42 @@
             }
 
             function buildMeetingColumns(eventsArray, parentEl) {
-                const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                const now = getRiyadhDate();
+                const todayDateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                 const categories = {
                     today: [],
                     future: [],
                     past: []
                 };
 
-                const parseTimeToMinutes = (timeStr) => {
-                    if (!timeStr) return 24 * 60;
-                    if (timeStr === 'EOD') return 17 * 60;
-                    const parts = timeStr.match(/(\d+):(\d+)\s*(AM|PM)?/i);
-                    if (parts) {
-                        let hours = parseInt(parts[1]);
-                        const minutes = parseInt(parts[2]);
-                        const period = parts[3] ? parts[3].toUpperCase() : '';
-                        if (period === 'PM' && hours !== 12) hours += 12;
-                        if (period === 'AM' && hours === 12) hours = 0;
-                        return hours * 60 + minutes;
-                    }
-                    return 24 * 60;
-                };
-
+                const deduped = [];
+                const seen = new Set();
                 eventsArray.forEach(eventEl => {
+                    if (!eventEl || !eventEl.dataset) return;
+                    const key = `${eventEl.dataset.date}-${eventEl.dataset.eventTitle}-${eventEl.dataset.eventTime}`;
+                    if (seen.has(key)) return;
+                    seen.add(key);
+                    deduped.push(eventEl);
+                });
+
+                deduped.forEach(eventEl => {
                     const eventDateStr = eventEl.dataset.date;
-                    let bucket = 'future';
-                    if (eventDateStr) {
-                        const eventDate = new Date(eventDateStr + 'T00:00:00');
-                        if (eventDate.toDateString() === todayDateOnly.toDateString()) {
-                            bucket = 'today';
-                        } else if (eventDate < todayDateOnly) {
-                            bucket = 'past';
-                        } else {
-                            bucket = 'future';
-                        }
+                    if (!eventDateStr) {
+                        categories.future.push(eventEl);
+                        return;
                     }
-                    categories[bucket].push(eventEl);
+
+                    if (isEventInPast(eventDateStr, eventEl.dataset.eventTime, now)) {
+                        categories.past.push(eventEl);
+                        return;
+                    }
+
+                    const eventDate = new Date(eventDateStr + 'T00:00:00');
+                    if (eventDate.toDateString() === todayDateOnly.toDateString()) {
+                        categories.today.push(eventEl);
+                    } else {
+                        categories.future.push(eventEl);
+                    }
                 });
 
                 const sortEvents = (eventsArray, order = 'asc') => {
@@ -4867,8 +4823,8 @@
                         if (dateA !== dateB) {
                             return order === 'asc' ? dateA.localeCompare(dateB) : dateB.localeCompare(dateA);
                         }
-                        const minutesA = parseTimeToMinutes(a.dataset.eventTime || '');
-                        const minutesB = parseTimeToMinutes(b.dataset.eventTime || '');
+                        const minutesA = parseEventTimeToMinutes(a.dataset.eventTime || '');
+                        const minutesB = parseEventTimeToMinutes(b.dataset.eventTime || '');
                         return order === 'asc' ? minutesA - minutesB : minutesB - minutesA;
                     });
                 };
@@ -5897,7 +5853,7 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
                             const isMilestone = eventEl.classList.contains('event-milestone') || eventEl.dataset.eventTime === 'EOD';
                             const eventTitle = eventEl.dataset.eventTitle || '';
                             const eventTime = eventEl.dataset.eventTime || '';
-                            const pastClass = isPast ? ' past-event' : '';
+                            const pastClass = isEventInPast(dateStr, eventTime) ? ' past-event' : '';
                             cellHtml += `<div class="month-event-dot ${isMilestone ? 'milestone' : ''}${pastClass}" title="${eventTitle} - ${eventTime}"><span class="event-time">${eventTime}</span><span class="event-title-text">${eventTitle}</span></div>`;
                         });
                     }
@@ -6017,7 +5973,8 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
 
             // Desktop Today View Rendering
             function renderTodayView() {
-                 const todayList = document.getElementById('today-events-list'); 
+                 today = getRiyadhDate();
+                const todayList = document.getElementById('today-events-list'); 
                  const todayDateEl = document.querySelector('#today-view .today-date'); 
                  if (!todayList || !todayDateEl) return;
                  
@@ -6046,11 +6003,18 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
                          }
                      });
                      
-                    uniqueEvents.forEach(eventEl => { 
+                    uniqueEvents.sort((a, b) => {
+                        const minutesA = parseEventTimeToMinutes(a.dataset.eventTime || '');
+                        const minutesB = parseEventTimeToMinutes(b.dataset.eventTime || '');
+                        return minutesA - minutesB;
+                    }).forEach(eventEl => { 
                         const eventDiv = document.createElement('div');
                         eventDiv.className = 'event';
                         if (eventEl.classList.contains('event-milestone')) {
                             eventDiv.classList.add('event-milestone');
+                        }
+                        if (isEventInPast(eventEl.dataset.date, eventEl.dataset.eventTime)) {
+                            eventDiv.classList.add('past-event');
                         }
                         
                         // Create visible event rectangle with title and time
@@ -6137,9 +6101,11 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
                     
                     // Add events for this day - create visible rectangles with titles
                     if (eventsByDate.has(dateStr)) {
-                        eventsByDate.get(dateStr).forEach(eventEl => {
+                        const dayEvents = eventsByDate.get(dateStr);
+                        dayEvents.forEach(eventEl => {
                             const eventDiv = document.createElement('div');
-                            eventDiv.className = `event${isPast ? ' past-event' : ''}`;
+                            const eventPast = isEventInPast(dateStr, eventEl.dataset.eventTime);
+                            eventDiv.className = `event${eventPast ? ' past-event' : ''}`;
                             if (eventEl.classList.contains('event-milestone')) {
                                 eventDiv.classList.add('event-milestone');
                             }
