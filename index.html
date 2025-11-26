@@ -375,83 +375,23 @@
             gap: 10px;
         }
         
-        /* Mode Toggle */
-        /* Mode Toggle */
         .mode-toggle-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            padding: 12px;
+            padding: 14px;
             background: rgba(0, 169, 157, 0.1);
             border-radius: 12px;
             margin-bottom: 15px;
             border: 1px solid var(--border-color);
         }
         
-        .mode-toggle-label {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text-light);
-            opacity: 0.7;
-        }
-        
-        .mode-toggle-label.active {
-            opacity: 1;
-            color: var(--primary-blue);
+        #modeStatusLabel {
+            font-size: 0.95rem;
             font-weight: 600;
-        }
-        
-        .mode-toggle-switch {
-            position: relative;
-            width: 60px;
-            height: 30px;
-        }
-        
-        .mode-toggle-switch input {
-            display: none;
-        }
-        
-        .mode-toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.2);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 34px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .mode-toggle-slider:before {
-            position: absolute;
-            content: "1";
-            height: 22px;
-            width: 22px;
-            left: 2px;
-            bottom: 2px;
-            background-color: white;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: var(--dark-teal);
-        }
-        
-        .mode-toggle-switch input:checked + .mode-toggle-slider {
-            background: linear-gradient(135deg, var(--primary-blue), #008a7e);
-            border-color: var(--primary-blue);
-        }
-        
-        .mode-toggle-switch input:checked + .mode-toggle-slider:before {
-            transform: translateX(30px);
-            content: "✓";
-            font-size: 0.8rem;
+            color: var(--primary-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
         }
         
         /* Single Agent Mode Styles */
@@ -597,6 +537,9 @@
             border-radius: 10px;
         }
         
+        .single-agent-display {
+            display: none;
+        }
         .agent-select-item {
             display: flex;
             align-items: center;
@@ -607,6 +550,40 @@
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
+        }
+        .agent-select-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-right: 40px;
+        }
+        .agent-info-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 2;
+        }
+        .agent-info-btn i {
+            pointer-events: none;
+        }
+        .agent-info-btn:hover {
+            background: var(--primary-blue);
+            color: var(--text-dark);
+            border-color: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 169, 157, 0.4);
         }
         
         .agent-select-item::before {
@@ -1147,6 +1124,20 @@
         @keyframes pulseUrgent { 0%, 100% { box-shadow: 0 0 5px rgba(245, 150, 32, 0.2), 0 2px 8px rgba(245, 150, 32, 0.1); } 50% { box-shadow: 0 0 8px rgba(245, 150, 32, 0.3), 0 2px 10px rgba(245, 150, 32, 0.15); } }
         .urgent-meeting-highlight h4 { color: var(--primary-orange) !important; border-bottom: 2px solid var(--primary-orange) !important; margin-top: 0 !important; font-size: 1.2rem !important; text-shadow: none; }
         .urgent-meeting-highlight p { color: var(--text-light); font-size: 0.95rem; line-height: 1.6; }
+        .agenda-summary-item { cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; border-radius: 12px; }
+        .agenda-summary-item:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25); }
+        .agenda-summary-item.past-event { opacity: 0.6; }
+        .summary-content ul { list-style: none; padding-left: 0; margin-top: 12px; }
+        .summary-content ul li { padding: 10px 14px; margin-bottom: 8px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); }
+        .agent-info-modal-body { text-align: center; padding: 10px 0 0; }
+        .agent-info-modal-body img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-blue); box-shadow: 0 6px 20px rgba(0, 169, 157, 0.4); margin-bottom: 15px; }
+        .agent-info-modal-body h3 { margin: 0 0 8px 0; color: var(--primary-blue); }
+        .agent-info-modal-body p { margin: 4px 0; }
+        .agenda-summary-item { cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .agenda-summary-item:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25); }
+        .agenda-summary-item.past-event { opacity: 0.6; }
+        .summary-content ul { list-style: none; padding-left: 0; margin-top: 10px; }
+        .summary-content ul li { position: relative; padding: 10px 15px; margin-bottom: 10px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); }
 
         .typing-indicator { display: flex; align-items: center; }
         .typing-indicator span { height: 8px; width: 8px; margin: 0 2px; background-color: var(--primary-blue); border-radius: 50%; display: inline-block; animation: bounce 1.4s infinite ease-in-out both; }
@@ -2779,12 +2770,7 @@
                 <div class="persona-display">
                     <!-- Mode Toggle -->
                     <div class="mode-toggle-container">
-                        <span class="mode-toggle-label" id="singleModeLabel">Single Agent</span>
-                        <label class="mode-toggle-switch">
-                            <input type="checkbox" id="modeToggle">
-                            <span class="mode-toggle-slider"></span>
-                        </label>
-                        <span class="mode-toggle-label active" id="multiModeLabel">Multi-Agent</span>
+                        <span id="modeStatusLabel">Single Agent Mode</span>
                     </div>
                     
                     <!-- Single Agent Display (for single mode) -->
@@ -3221,6 +3207,17 @@
             <div class="persona-options" id="personaOptions"></div>
         </div>
     </div>
+    <div id="agentInfoModal" class="modal">
+        <div class="modal-content" style="max-width: 420px;">
+            <span class="close-button">×</span>
+            <div class="agent-info-modal-body">
+                <img id="agent-info-avatar" src="" alt="Agent Avatar">
+                <h3 id="agent-info-name">Agent Name</h3>
+                <p id="agent-info-role" style="font-weight: 600; color: var(--primary-blue);"></p>
+                <p id="agent-info-description" style="opacity: 0.85;"></p>
+            </div>
+        </div>
+    </div>
 
     <div id="eventModal" class="modal">
         <div class="modal-content">
@@ -3294,7 +3291,7 @@
                 { id: 'nouf', name: 'Nouf Al-Jafali',  title: 'AI strategic consultant', largeImg: 'https://img.freepik.com/premium-photo/arab-abaya-woman-happy-using-mobile-phone-excited-smile-saudi-emirati-businesswoman_1022426-10277.jpg', smallImg: 'https://img.freepik.com/premium-photo/arab-abaya-woman-happy-using-mobile-phone-excited-smile-saudi-emirati-businesswoman_1022426-10277.jpg', description: 'As your dedicated consultant for strategic focus areas, I provide in-depth analysis, policy recommendations, and detailed briefings on the key topics you are exploring.', systemPrompt: 'You are Nouf Al-Jafali, an AI Strategy Consultant for HRSD in Saudi Arabia. Your Excellency will ask you to provide deep dives into specific strategic topics like "Strengthening Labor Market" or "Empowering Society & Individuals" or "Enabling the Non-Profit Sector" or "Strategic Partnerships". Your responses should be comprehensive, insightful, and structured, providing detailed analysis, current status, and strategic recommendations related to the specific topic at hand.'}			];
             let currentPersonaId = 'hakim';
             let selectedAgents = ['hakim']; // Multi-agent: Array of selected agent IDs
-            let isMultiAgentMode = false; // Mode: false = single agent, true = multi-agent
+            let isMultiAgentMode = true; // Mode: false = single agent, true = multi-agent
             let chatHistory = [];
             let selectedText = '';
             // Set "today" to the specified context date: Wednesday, Oct 22, 2025
@@ -3308,6 +3305,12 @@
             const meetingsModal = document.getElementById("meetingsModal");
             const dayActionModal = document.getElementById("dayActionModal");
             const messageModal = document.getElementById("messageModal"); // New modal
+            const agentInfoModal = document.getElementById('agentInfoModal');
+            const agentInfoAvatar = document.getElementById('agent-info-avatar');
+            const agentInfoName = document.getElementById('agent-info-name');
+            const agentInfoRole = document.getElementById('agent-info-role');
+            const agentInfoDescription = document.getElementById('agent-info-description');
+            const modeStatusLabel = document.getElementById('modeStatusLabel');
             const closeModalBtns = document.querySelectorAll('.close-button');
             const personaOptionsContainer = document.getElementById('personaOptions');
             const navButtons = document.querySelectorAll('.nav-tabs .nav-button'); // More specific selector
@@ -3386,8 +3389,19 @@
                             <div class="agent-select-name">${agent.name}</div>
                             <div class="agent-select-title">${agent.title}</div>
                         </div>
+                        <button class="agent-info-btn" data-agent-id="${agent.id}" title="More about ${agent.name}">
+                            <i class="fas fa-info"></i>
+                        </button>
                     `;
                     
+                    const infoBtn = div.querySelector('.agent-info-btn');
+                    if (infoBtn) {
+                        infoBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            showAgentInfo(agent.id);
+                        });
+                    }
+
                     // Handle checkbox change
                     const checkbox = div.querySelector('.agent-checkbox');
                     checkbox.addEventListener('change', (e) => {
@@ -3412,6 +3426,8 @@
                 if (countBadge) {
                     countBadge.textContent = selectedAgents.length;
                 }
+                
+                updateModeStatusLabel();
             }
             
             function toggleAgentSelection(agentId) {
@@ -3437,32 +3453,16 @@
             }
             
             // --- Mode Toggle Functions ---
-            function toggleMode(multiMode) {
-                isMultiAgentMode = multiMode;
+            function toggleMode() {
+                isMultiAgentMode = true;
                 
                 const singleAgentDisplay = document.getElementById('singleAgentDisplay');
                 const multiAgentContent = document.getElementById('multiAgentContent');
-                const agentSelectorBtn = document.getElementById('agentSelectorBtn');
-                const singleModeLabel = document.getElementById('singleModeLabel');
-                const multiModeLabel = document.getElementById('multiModeLabel');
                 
-                if (isMultiAgentMode) {
-                    // Multi-agent mode
-                    if (singleAgentDisplay) singleAgentDisplay.classList.remove('active');
-                    if (multiAgentContent) multiAgentContent.classList.remove('hidden');
-                    if (agentSelectorBtn) agentSelectorBtn.classList.remove('active');
-                    if (singleModeLabel) singleModeLabel.classList.remove('active');
-                } else {
-                    // Single agent mode
-                    if (singleAgentDisplay) singleAgentDisplay.classList.add('active');
-                    if (multiAgentContent) multiAgentContent.classList.add('hidden');
-                    if (agentSelectorBtn) agentSelectorBtn.classList.add('active');
-                    if (multiModeLabel) multiModeLabel.classList.remove('active');
-                    if (singleModeLabel) singleModeLabel.classList.add('active');
-                    
-                    // Update single agent display
-                    updateSingleAgentDisplay(currentPersonaId);
-                }
+                if (singleAgentDisplay) singleAgentDisplay.classList.remove('active');
+                if (multiAgentContent) multiAgentContent.classList.remove('hidden');
+                
+                updateModeStatusLabel();
             }
             
             function updateSingleAgentDisplay(agentId) {
@@ -3488,6 +3488,22 @@
                     const spans = selectorBtn.querySelectorAll('span');
                     spans.forEach(span => span.remove());
                 }
+            }
+
+            function updateModeStatusLabel() {
+                if (!modeStatusLabel) return;
+                modeStatusLabel.textContent = selectedAgents.length > 1 ? 'Multi Agent Mode' : 'Single Agent Mode';
+            }
+            
+            function showAgentInfo(agentId) {
+                if (!agentInfoModal) return;
+                const agent = personaData.find(p => p.id === agentId);
+                if (!agent) return;
+                if (agentInfoAvatar) agentInfoAvatar.src = agent.largeImg || agent.smallImg;
+                if (agentInfoName) agentInfoName.textContent = agent.name;
+                if (agentInfoRole) agentInfoRole.textContent = agent.title;
+                if (agentInfoDescription) agentInfoDescription.textContent = agent.description;
+                openModal(agentInfoModal);
             }
             
             function showAgentSelectorMenu() {
@@ -3673,19 +3689,21 @@
 
                 if (!summarizeBtn || !prepareBtn) return;
 
-                // Check if event is in the past
-                let isPast = false;
-                if (dateStr) {
-                    const eventDate = new Date(dateStr + 'T00:00:00');
-                    const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-                    isPast = eventDate < todayDateOnly;
-                }
+                // Check if event is in the past (date + time)
+                const isPast = dateStr ? isEventInPast(dateStr, time) : false;
 
                 // Clone and replace buttons to remove old event listeners
                 const newSummarizeBtn = summarizeBtn.cloneNode(true);
                 summarizeBtn.parentNode.replaceChild(newSummarizeBtn, summarizeBtn);
                 const newPrepareBtn = prepareBtn.cloneNode(true);
                 prepareBtn.parentNode.replaceChild(newPrepareBtn, prepareBtn);
+
+                // Summaries only for completed meetings
+                if (isPast) {
+                    newSummarizeBtn.style.display = '';
+                } else {
+                    newSummarizeBtn.style.display = 'none';
+                }
 
                 // Hide prepare button for past meetings
                 if (isPast) {
@@ -3735,42 +3753,42 @@
             }
 
             function buildMeetingColumns(eventsArray, parentEl) {
-                const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                const now = getRiyadhDate();
+                const todayDateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                 const categories = {
                     today: [],
                     future: [],
                     past: []
                 };
 
-                const parseTimeToMinutes = (timeStr) => {
-                    if (!timeStr) return 24 * 60;
-                    if (timeStr === 'EOD') return 17 * 60;
-                    const parts = timeStr.match(/(\d+):(\d+)\s*(AM|PM)?/i);
-                    if (parts) {
-                        let hours = parseInt(parts[1]);
-                        const minutes = parseInt(parts[2]);
-                        const period = parts[3] ? parts[3].toUpperCase() : '';
-                        if (period === 'PM' && hours !== 12) hours += 12;
-                        if (period === 'AM' && hours === 12) hours = 0;
-                        return hours * 60 + minutes;
-                    }
-                    return 24 * 60;
-                };
-
+                const deduped = [];
+                const seen = new Set();
                 eventsArray.forEach(eventEl => {
+                    if (!eventEl || !eventEl.dataset) return;
+                    const key = `${eventEl.dataset.date}-${eventEl.dataset.eventTitle}-${eventEl.dataset.eventTime}`;
+                    if (seen.has(key)) return;
+                    seen.add(key);
+                    deduped.push(eventEl);
+                });
+
+                deduped.forEach(eventEl => {
                     const eventDateStr = eventEl.dataset.date;
-                    let bucket = 'future';
-                    if (eventDateStr) {
-                        const eventDate = new Date(eventDateStr + 'T00:00:00');
-                        if (eventDate.toDateString() === todayDateOnly.toDateString()) {
-                            bucket = 'today';
-                        } else if (eventDate < todayDateOnly) {
-                            bucket = 'past';
-                        } else {
-                            bucket = 'future';
-                        }
+                    if (!eventDateStr) {
+                        categories.future.push(eventEl);
+                        return;
                     }
-                    categories[bucket].push(eventEl);
+
+                    if (isEventInPast(eventDateStr, eventEl.dataset.eventTime, now)) {
+                        categories.past.push(eventEl);
+                        return;
+                    }
+
+                    const eventDate = new Date(eventDateStr + 'T00:00:00');
+                    if (eventDate.toDateString() === todayDateOnly.toDateString()) {
+                        categories.today.push(eventEl);
+                    } else {
+                        categories.future.push(eventEl);
+                    }
                 });
 
                 const sortEvents = (eventsArray, order = 'asc') => {
@@ -3780,8 +3798,8 @@
                         if (dateA !== dateB) {
                             return order === 'asc' ? dateA.localeCompare(dateB) : dateB.localeCompare(dateA);
                         }
-                        const minutesA = parseTimeToMinutes(a.dataset.eventTime || '');
-                        const minutesB = parseTimeToMinutes(b.dataset.eventTime || '');
+                        const minutesA = parseEventTimeToMinutes(a.dataset.eventTime || '');
+                        const minutesB = parseEventTimeToMinutes(b.dataset.eventTime || '');
                         return order === 'asc' ? minutesA - minutesB : minutesB - minutesA;
                     });
                 };
@@ -4561,28 +4579,68 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
             // --- UI & Event Listeners ---
             function updateTodaysAgendaPanel() {
                  if (!summaryContent) return;
-                const now = today;
+                const now = getRiyadhDate();
+                today = now;
                 const todayStr = now.toISOString().split('T')[0];
-                const allEvents = Array.from(document.querySelectorAll('.event'));
+                const allEvents = Array.from(document.querySelectorAll('.event[data-date]'));
                 const todaysEvents = allEvents.filter(eventEl => eventEl.dataset.date === todayStr);
-                const upcomingEvents = todaysEvents.filter(eventEl => { /* ... time filtering logic ... */
-                    const eventTimeStr = eventEl.dataset.eventTime; let eventHour = 99; let eventMinute = 0;
-                    if (eventTimeStr === 'EOD') { eventHour = 17; } else if (eventTimeStr.includes(':')) { const parts = eventTimeStr.match(/(\d+):(\d+)\s*(AM|PM)?/i); if (parts) { eventHour = parseInt(parts[1]); eventMinute = parseInt(parts[2]); const isPM = parts[3] && parts[3].toUpperCase() === 'PM'; if (isPM && eventHour !== 12) eventHour += 12; if (!isPM && eventHour === 12) eventHour = 0; } }
-                    return now.getHours() < eventHour || (now.getHours() === eventHour && now.getMinutes() < eventMinute);
-                });
-                upcomingEvents.sort((a, b) => { /* ... time sorting logic ... */
-                    const timeStrToMinutes = (timeStr) => { if (timeStr === 'EOD') return 17 * 60; const parts = timeStr.match(/(\d+):(\d+)\s*(AM|PM)?/i); if (parts) { let hours = parseInt(parts[1]); const minutes = parseInt(parts[2]); const isPM = parts[3] && parts[3].toUpperCase() === 'PM'; if (isPM && hours !== 12) hours += 12; if (!isPM && hours === 12) hours = 0; return hours * 60 + minutes; } return 24 * 60; }; return timeStrToMinutes(a.dataset.eventTime) - timeStrToMinutes(b.dataset.eventTime);
+
+                const seen = new Set();
+                const uniqueEvents = [];
+                todaysEvents.forEach(eventEl => {
+                    const key = `${eventEl.dataset.eventTitle}-${eventEl.dataset.eventTime}`;
+                    if (!seen.has(key)) {
+                        seen.add(key);
+                        uniqueEvents.push(eventEl);
+                    }
                 });
 
-                if (upcomingEvents.length > 0) { /* ... populate with next/later events ... */
-                    const nextEvent = upcomingEvents[0]; const laterEvents = upcomingEvents.slice(1);
-                    // Wrap the most upcoming meeting in urgent highlight
-                    summaryContent.innerHTML = `<div class="urgent-meeting-highlight"><h4>Next Up: ${nextEvent.dataset.eventTitle} (${nextEvent.dataset.eventTime})</h4> <p>${nextEvent.dataset.eventDetails}</p></div>`;
-                    if (laterEvents.length > 0) { summaryContent.innerHTML += '<h4>Later Today</h4><ul>'; laterEvents.forEach(eventEl => { summaryContent.innerHTML += `<li><strong>${eventEl.dataset.eventTitle}</strong> (${eventEl.dataset.eventTime})</li>`; }); summaryContent.innerHTML += '</ul>'; }
-                } else { /* ... show completed / look ahead ... */
-                     summaryContent.innerHTML = `<h4>Today's Agenda</h4><p>No further meetings or milestones scheduled for today.</p>`;
-                    const tomorrow = new Date(now); tomorrow.setDate(now.getDate() + 1); const tomorrowStr = tomorrow.toISOString().split('T')[0]; const tomorrowsEvents = allEvents.filter(eventEl => eventEl.dataset.date === tomorrowStr); tomorrowsEvents.sort((a, b) => { /* Add sorting if needed */ });
-                    if (tomorrowsEvents.length > 0) { summaryContent.innerHTML += `<h4>Tomorrow's First Item: ${tomorrowsEvents[0].dataset.eventTitle} (${tomorrowsEvents[0].dataset.eventTime})</h4>`; }
+                const upcomingEvents = uniqueEvents.filter(eventEl => !isEventInPast(eventEl.dataset.date, eventEl.dataset.eventTime, now));
+                upcomingEvents.sort((a, b) => parseEventTimeToMinutes(a.dataset.eventTime || '') - parseEventTimeToMinutes(b.dataset.eventTime || ''));
+
+                summaryContent.innerHTML = '';
+
+                const attachAgendaClick = (element, eventEl) => {
+                    element.classList.add('agenda-summary-item');
+                    element.addEventListener('click', () => {
+                        openEventModal(eventEl.dataset.eventTitle, eventEl.dataset.eventTime, eventEl.dataset.eventDetails, eventEl.dataset.date, eventEl);
+                    });
+                };
+
+                if (upcomingEvents.length > 0) {
+                    const nextEvent = upcomingEvents[0];
+                    const laterEvents = upcomingEvents.slice(1);
+
+                    const highlight = document.createElement('div');
+                    highlight.className = 'urgent-meeting-highlight agenda-summary-item';
+                    highlight.innerHTML = `<h4>Next Up: ${nextEvent.dataset.eventTitle} (${nextEvent.dataset.eventTime || ''})</h4><p>${nextEvent.dataset.eventDetails || ''}</p>`;
+                    attachAgendaClick(highlight, nextEvent);
+                    summaryContent.appendChild(highlight);
+
+                    if (laterEvents.length > 0) {
+                        const header = document.createElement('h4');
+                        header.textContent = 'Later Today';
+                        summaryContent.appendChild(header);
+
+                        const list = document.createElement('ul');
+                        laterEvents.forEach(eventEl => {
+                            const item = document.createElement('li');
+                            item.innerHTML = `<strong>${eventEl.dataset.eventTitle}</strong> (${eventEl.dataset.eventTime || ''})`;
+                            attachAgendaClick(item, eventEl);
+                            list.appendChild(item);
+                        });
+                        summaryContent.appendChild(list);
+                    }
+                } else {
+                    summaryContent.innerHTML = `<h4>Today's Agenda</h4><p>No further meetings or milestones scheduled for today.</p>`;
+                    const tomorrow = new Date(now);
+                    tomorrow.setDate(now.getDate() + 1);
+                    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+                    const tomorrowsEvents = allEvents.filter(eventEl => eventEl.dataset.date === tomorrowStr);
+                    tomorrowsEvents.sort((a, b) => parseEventTimeToMinutes(a.dataset.eventTime || '') - parseEventTimeToMinutes(b.dataset.eventTime || ''));
+                    if (tomorrowsEvents.length > 0) {
+                        summaryContent.innerHTML += `<h4>Tomorrow's First Item: ${tomorrowsEvents[0].dataset.eventTitle} (${tomorrowsEvents[0].dataset.eventTime || ''})</h4>`;
+                    }
                 }
             }
 
@@ -4685,6 +4743,34 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
             
             // Initialize today (will be refreshed when agenda is opened)
             let today = getRiyadhDate();
+
+            function parseEventTimeToMinutes(timeStr) {
+                if (!timeStr || typeof timeStr !== 'string') return 24 * 60;
+                if (timeStr.trim().toUpperCase() === 'EOD') return 17 * 60;
+                const parts = timeStr.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+                if (parts) {
+                    let hours = parseInt(parts[1]);
+                    const minutes = parseInt(parts[2]);
+                    const period = parts[3] ? parts[3].toUpperCase() : '';
+                    if (period === 'PM' && hours !== 12) hours += 12;
+                    if (period === 'AM' && hours === 12) hours = 0;
+                    return hours * 60 + minutes;
+                }
+                return 24 * 60;
+            }
+
+            function isEventInPast(dateStr, timeStr, referenceDate = null) {
+                if (!dateStr) return false;
+                const now = referenceDate || getRiyadhDate();
+                const currentDateOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                const eventDate = new Date(dateStr + 'T00:00:00');
+                if (eventDate < currentDateOnly) return true;
+                if (eventDate > currentDateOnly) return false;
+                if (!timeStr) return false;
+                const eventMinutes = parseEventTimeToMinutes(timeStr);
+                const currentMinutes = now.getHours() * 60 + now.getMinutes();
+                return eventMinutes < currentMinutes;
+            }
             
             // State for calendar navigation
             let currentWeekStart = new Date(today);
@@ -4698,6 +4784,7 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
 
             // Desktop Month Calendar Rendering
             function renderDesktopMonthCalendar() {
+                 today = getRiyadhDate();
                  const monthGrid = document.getElementById('month-calendar-grid');
                 if (!monthGrid) return;
                 const allEvents = Array.from(document.querySelectorAll('.event[data-date]'));
@@ -4739,7 +4826,7 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
                             const isMilestone = eventEl.classList.contains('event-milestone') || eventEl.dataset.eventTime === 'EOD';
                             const eventTitle = eventEl.dataset.eventTitle || '';
                             const eventTime = eventEl.dataset.eventTime || '';
-                            const pastClass = isPast ? ' past-event' : '';
+                            const pastClass = isEventInPast(dateStr, eventTime) ? ' past-event' : '';
                             cellHtml += `<div class="month-event-dot ${isMilestone ? 'milestone' : ''}${pastClass}" title="${eventTitle} - ${eventTime}"><span class="event-time">${eventTime}</span><span class="event-title-text">${eventTitle}</span></div>`;
                         });
                     }
@@ -4830,6 +4917,9 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
                     uniqueEvents.forEach(eventEl => {
                         const eventDiv = document.createElement('div');
                         eventDiv.className = 'event';
+                        if (isEventInPast(dateStr, eventEl.dataset.eventTime)) {
+                            eventDiv.classList.add('past-event');
+                        }
                         if (eventEl.classList.contains('event-milestone')) {
                             eventDiv.classList.add('event-milestone');
                         }
@@ -4859,7 +4949,8 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
 
             // Desktop Today View Rendering
             function renderTodayView() {
-                 const todayList = document.getElementById('today-events-list'); 
+                 today = getRiyadhDate();
+                const todayList = document.getElementById('today-events-list'); 
                  const todayDateEl = document.querySelector('#today-view .today-date'); 
                  if (!todayList || !todayDateEl) return;
                  
@@ -4888,11 +4979,18 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
                          }
                      });
                      
-                    uniqueEvents.forEach(eventEl => { 
+                    uniqueEvents.sort((a, b) => {
+                        const minutesA = parseEventTimeToMinutes(a.dataset.eventTime || '');
+                        const minutesB = parseEventTimeToMinutes(b.dataset.eventTime || '');
+                        return minutesA - minutesB;
+                    }).forEach(eventEl => { 
                         const eventDiv = document.createElement('div');
                         eventDiv.className = 'event';
                         if (eventEl.classList.contains('event-milestone')) {
                             eventDiv.classList.add('event-milestone');
+                        }
+                        if (isEventInPast(eventEl.dataset.date, eventEl.dataset.eventTime)) {
+                            eventDiv.classList.add('past-event');
                         }
                         
                         // Create visible event rectangle with title and time
@@ -4914,6 +5012,7 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
 
             // Desktop Week View Rendering
             function renderWeekView() {
+                today = getRiyadhDate();
                 const weekView = document.getElementById('week-view');
                 if (!weekView) return;
                 
@@ -4979,9 +5078,11 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
                     
                     // Add events for this day - create visible rectangles with titles
                     if (eventsByDate.has(dateStr)) {
-                        eventsByDate.get(dateStr).forEach(eventEl => {
+                        const dayEvents = eventsByDate.get(dateStr);
+                        dayEvents.forEach(eventEl => {
                             const eventDiv = document.createElement('div');
-                            eventDiv.className = `event${isPast ? ' past-event' : ''}`;
+                            const eventPast = isEventInPast(dateStr, eventEl.dataset.eventTime);
+                            eventDiv.className = `event${eventPast ? ' past-event' : ''}`;
                             if (eventEl.classList.contains('event-milestone')) {
                                 eventDiv.classList.add('event-milestone');
                             }
@@ -5122,7 +5223,7 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
                         monthGrid.appendChild(dayCell);
                     }
                 }
-                function renderEvents(dateStr) { const dayEvents = allEvents.filter(e => e.dataset.date === dateStr); if (dayEvents.length === 0) { agendaEvents.innerHTML = '<p style="opacity: 0.7; text-align: center; padding: 20px;">No events scheduled for this day</p>'; return; } agendaEvents.innerHTML = ''; dayEvents.forEach(eventEl => { const eventDiv = document.createElement('div'); eventDiv.className = 'event'; if (eventEl.classList.contains('event-milestone')) { eventDiv.classList.add('event-milestone'); } eventDiv.innerHTML = `<div class="event-time">${eventEl.dataset.eventTime}</div> <div class="event-title">${eventEl.dataset.eventTitle}</div>`; eventDiv.addEventListener('click', () => { openEventModal(eventEl.dataset.eventTitle, eventEl.dataset.eventTime, eventEl.dataset.eventDetails, dateStr, eventEl); }); agendaEvents.appendChild(eventDiv); }); }
+                function renderEvents(dateStr) { const dayEvents = allEvents.filter(e => e.dataset.date === dateStr); if (dayEvents.length === 0) { agendaEvents.innerHTML = '<p style="opacity: 0.7; text-align: center; padding: 20px;">No events scheduled for this day</p>'; return; } agendaEvents.innerHTML = ''; dayEvents.forEach(eventEl => { const eventDiv = document.createElement('div'); eventDiv.className = 'event'; if (eventEl.classList.contains('event-milestone')) { eventDiv.classList.add('event-milestone'); } if (isEventInPast(dateStr, eventEl.dataset.eventTime)) { eventDiv.classList.add('past-event'); } eventDiv.innerHTML = `<div class="event-time">${eventEl.dataset.eventTime}</div> <div class="event-title">${eventEl.dataset.eventTitle}</div>`; eventDiv.addEventListener('click', () => { openEventModal(eventEl.dataset.eventTitle, eventEl.dataset.eventTime, eventEl.dataset.eventDetails, dateStr, eventEl); }); agendaEvents.appendChild(eventDiv); }); }
                 renderCalendar(); renderEvents(mobileSelectedDate.toISOString().split('T')[0]);
             }
 
@@ -6132,18 +6233,14 @@ Keep it brief and executive-level.`;
             renderTodayView();
             updateWeekHeader();
             
-            // Initialize UI based on mode (start in single agent mode)
-            toggleMode(false);
+            // Initialize UI based on mode (start in multi-agent mode)
+            toggleMode(true);
             renderAgentSelection();
             updateSingleAgentDisplay(currentPersonaId);
+            updateModeStatusLabel();
             
             // Mode Toggle
-            const modeToggle = document.getElementById('modeToggle');
-            if (modeToggle) {
-                modeToggle.addEventListener('change', (e) => {
-                    toggleMode(e.target.checked);
-                });
-            }
+            // Mode status text updates automatically via selection changes
             
             // Agent Selector Button (for single mode)
             const agentSelectorBtn = document.getElementById('agentSelectorBtn');
