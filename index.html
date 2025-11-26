@@ -331,6 +331,7 @@
             min-height: 0;
             max-height: calc(100vh - 220px);
             box-shadow: var(--shadow-lg);
+            overflow: visible; /* Allow dropdowns to overflow */
         }
 
         .persona-display {
@@ -1023,6 +1024,8 @@
             padding: 15px 20px;
             border-radius: 0 0 20px 0; /* Only bottom-right corner of chat-area */
             flex-shrink: 0;
+            overflow: visible; /* Allow dropdowns to overflow */
+            position: relative; /* For absolute positioned children */
         }
         .chat-input-controls { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
         #chatInput {
@@ -2000,9 +2003,33 @@
                 flex: 1;
                 min-width: 200px;
             }
-            .chat-section-container { flex-direction: column; max-height: 60vh; }
+            .chat-section-container { 
+                flex-direction: column; 
+                max-height: 60vh; 
+            }
             .summary-section, .agenda-container { max-height: 60vh; }
             .tools-container { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+        }
+
+        /* Fix for 768px-1200px range: Ensure chat-interaction-area doesn't get compressed */
+        @media (min-width: 769px) and (max-width: 1200px) {
+            .chat-section-container {
+                flex-direction: column !important;
+            }
+            
+            .persona-display {
+                flex: 0 0 auto !important;
+                width: 100% !important;
+                max-width: 700px !important;
+                margin: 0 auto 20px !important;
+                padding: 20px !important;
+            }
+            
+            .chat-interaction-area {
+                flex: 1 !important;
+                min-width: 0 !important;
+                width: 100% !important;
+            }
         }
 
         @media (max-width: 768px) {
@@ -2808,6 +2835,13 @@
                 top: 10px !important;
                 right: 10px !important;
             }
+        }
+
+        /* Fix for chat-interaction-area compression at all screen sizes */
+        .chat-interaction-area {
+            flex: 1;
+            min-width: 0;
+            min-height: 0;
         }
 
         /* ===== 4. TOOL CARDS FIXES ===== */
@@ -4249,20 +4283,71 @@
                 
                 const menu = document.createElement('div');
                 menu.id = 'agentSelectorMenu';
-                menu.style.cssText = `
-                    position: absolute;
-                    bottom: calc(100% + 8px);
-                    left: 0;
-                    background: var(--container-bg);
-                    backdrop-filter: blur(30px);
-                    border: 2px solid var(--primary-blue);
-                    border-radius: 14px;
-                    padding: 8px;
-                    box-shadow: 0 -8px 30px rgba(0, 169, 157, 0.4);
-                    z-index: 1000;
-                    min-width: 220px;
-                    animation: slideUpFadeIn 0.3s ease;
-                `;
+                
+                // Get button position for fixed positioning
+                const selectorBtn = document.getElementById('agentSelectorBtn');
+                let menuStyle = '';
+                
+                if (selectorBtn) {
+                    const rect = selectorBtn.getBoundingClientRect();
+                    const isMobile = window.innerWidth <= 768;
+                    
+                    if (isMobile) {
+                        // On mobile, use fixed positioning relative to viewport
+                        menuStyle = `
+                            position: fixed;
+                            bottom: ${window.innerHeight - rect.top + 8}px;
+                            left: ${rect.left}px;
+                            right: auto;
+                            background: var(--container-bg);
+                            backdrop-filter: blur(30px);
+                            border: 2px solid var(--primary-blue);
+                            border-radius: 14px;
+                            padding: 8px;
+                            box-shadow: 0 -8px 30px rgba(0, 169, 157, 0.4);
+                            z-index: 10000;
+                            min-width: 220px;
+                            max-width: calc(100vw - ${rect.left + 20}px);
+                            animation: slideUpFadeIn 0.3s ease;
+                        `;
+                    } else {
+                        // On desktop, use absolute but ensure it's not clipped
+                        menuStyle = `
+                            position: fixed;
+                            bottom: ${window.innerHeight - rect.top + 8}px;
+                            left: ${rect.left}px;
+                            right: auto;
+                            background: var(--container-bg);
+                            backdrop-filter: blur(30px);
+                            border: 2px solid var(--primary-blue);
+                            border-radius: 14px;
+                            padding: 8px;
+                            box-shadow: 0 -8px 30px rgba(0, 169, 157, 0.4);
+                            z-index: 10000;
+                            min-width: 220px;
+                            max-width: calc(100vw - ${rect.left + 20}px);
+                            animation: slideUpFadeIn 0.3s ease;
+                        `;
+                    }
+                } else {
+                    // Fallback to absolute if button not found
+                    menuStyle = `
+                        position: absolute;
+                        bottom: calc(100% + 8px);
+                        left: 0;
+                        background: var(--container-bg);
+                        backdrop-filter: blur(30px);
+                        border: 2px solid var(--primary-blue);
+                        border-radius: 14px;
+                        padding: 8px;
+                        box-shadow: 0 -8px 30px rgba(0, 169, 157, 0.4);
+                        z-index: 10000;
+                        min-width: 220px;
+                        animation: slideUpFadeIn 0.3s ease;
+                    `;
+                }
+                
+                menu.style.cssText = menuStyle;
                 
                 // Add animation keyframes
                 if (!document.getElementById('agentMenuAnimation')) {
@@ -4331,24 +4416,47 @@
                         updatePersonaUI(agent.id);
                         updateSingleAgentDisplay(agent.id);
                         menu.style.animation = 'slideUpFadeIn 0.2s ease reverse';
-                        setTimeout(() => menu.remove(), 200);
+                        if (menu._cleanup) menu._cleanup();
+                        setTimeout(() => {
+                            if (menu.parentNode) menu.remove();
+                        }, 200);
                     });
                     
                     menu.appendChild(item);
                 });
                 
-                const selectorBtn = document.getElementById('agentSelectorBtn');
-                if (selectorBtn) {
-                    selectorBtn.style.position = 'relative';
-                    selectorBtn.appendChild(menu);
-                }
+                // Append menu to body instead of button to avoid overflow clipping
+                document.body.appendChild(menu);
+                
+                // Update position on scroll/resize
+                const updateMenuPosition = () => {
+                    const selectorBtn = document.getElementById('agentSelectorBtn');
+                    if (selectorBtn && menu.parentNode) {
+                        const rect = selectorBtn.getBoundingClientRect();
+                        menu.style.bottom = `${window.innerHeight - rect.top + 8}px`;
+                        menu.style.left = `${rect.left}px`;
+                        menu.style.maxWidth = `calc(100vw - ${rect.left + 20}px)`;
+                    }
+                };
+                
+                window.addEventListener('scroll', updateMenuPosition, true);
+                window.addEventListener('resize', updateMenuPosition);
+                
+                // Store cleanup function
+                menu._cleanup = () => {
+                    window.removeEventListener('scroll', updateMenuPosition, true);
+                    window.removeEventListener('resize', updateMenuPosition);
+                };
                 
                 // Close menu when clicking outside
                 setTimeout(() => {
                     document.addEventListener('click', function closeMenu(e) {
                         if (!menu.contains(e.target) && e.target.id !== 'agentSelectorBtn' && !e.target.closest('#agentSelectorBtn')) {
                             menu.style.animation = 'slideUpFadeIn 0.2s ease reverse';
-                            setTimeout(() => menu.remove(), 200);
+                            if (menu._cleanup) menu._cleanup();
+                            setTimeout(() => {
+                                if (menu.parentNode) menu.remove();
+                            }, 200);
                             document.removeEventListener('click', closeMenu);
                         }
                     });
