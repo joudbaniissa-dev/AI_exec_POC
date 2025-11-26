@@ -189,8 +189,8 @@
         }
 
         .logo-container {
-            width: 75px;
-            height: 55px;
+            width: 55px;
+            height: 45px;
             overflow: hidden;
         }
 
@@ -1785,6 +1785,10 @@
             overflow-y: auto;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
+        #focus-modal-content {
+            width: 950px;
+            max-width: 95%;
+        }
         @keyframes slideInModal { /* Renamed animation */
             from {
                 transform: translateY(-50px) scale(0.9);
@@ -1941,7 +1945,7 @@
 
         .meeting-columns-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* Always 3 columns on desktop */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
             margin-top: 15px;
         }
@@ -3497,7 +3501,6 @@
             object-fit: contain;
         }
 
-        .logo-container img,
         .agent-mini-avatar,
         .single-agent-avatar,
         .persona-option img {
@@ -3682,8 +3685,12 @@
     <header class="header">
         <div class="header-left">
             <div class="logo-container">
-                <img src="https://www.hrsd.gov.sa/themes/custom/hrsd_saud/logo_en.svg" alt="Logo" />
-            </div>
+  <img 
+    src="logo.jpg"
+    alt="Logo"
+  />
+</div>
+
             <span>AI Executive Office</span>
         </div>
         <div class="header-right">
