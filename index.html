@@ -1672,13 +1672,15 @@
             display: flex;
             gap: 10px;
             padding-top: 15px;
+            flex-wrap: wrap; /* Allow wrapping if needed */
         }
         .topic-actions button {
-            flex: 1;
+            flex: 1 1 auto;
+            min-width: 0; /* Allow shrinking below content size */
             background: rgba(0, 0, 0, 0.2);
             border: 1px solid var(--border-color);
             color: var(--text-light);
-            padding: 10px 12px;
+            padding: 10px 8px; /* Reduced horizontal padding */
             border-radius: 10px;
             cursor: pointer;
             font-size: 0.85rem;
@@ -1687,6 +1689,11 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
+            white-space: normal; /* Allow text wrapping */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            text-align: center;
+            line-height: 1.3;
         }
         .topic-actions button:hover {
             background: linear-gradient(135deg, var(--primary-blue), #008a7e);
@@ -2570,6 +2577,799 @@
                 flex-grow: 1;
                 overflow-y: auto;
                 min-height: 0; /* Allow this to shrink and grow */
+            }
+        }
+
+        /* ============================================
+           COMPREHENSIVE RESPONSIVE FIXES
+           ============================================ */
+
+        /* ===== 1. HEADER & NAVIGATION FIXES ===== */
+        @media (max-width: 768px) {
+            /* Logo container responsive */
+            .logo-container {
+                width: 60px;
+                height: 45px;
+                flex-shrink: 0;
+            }
+            
+            .logo-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+            
+            /* Header spacing */
+            .header {
+                padding: 12px 15px;
+                gap: 10px;
+            }
+            
+            .header-left,
+            .header-right {
+                gap: 10px;
+            }
+            
+            /* User profile image */
+            .header-right .user-profile img {
+                width: 35px;
+                height: 35px;
+            }
+            
+            /* Mobile menu button */
+            .mobile-menu-btn {
+                width: 44px;
+                height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.2rem;
+            }
+            
+            /* Navigation tabs - ensure they don't overflow */
+            .nav-tabs {
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+            
+            .nav-tabs button {
+                padding: 10px 15px;
+                font-size: 0.85rem;
+                white-space: nowrap;
+                flex: 1 1 auto;
+                min-width: 0;
+            }
+            
+            /* Nav tabs container positioning */
+            .nav-tabs-container {
+                top: 69px; /* Adjust based on header height */
+                max-height: calc(100vh - 69px);
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        /* ===== 2. TOPIC CARDS - COMPLETE FIX ===== */
+        /* Desktop - ensure buttons don't overflow */
+        .topic-actions {
+            display: flex;
+            gap: 10px;
+            padding-top: 15px;
+            flex-wrap: wrap; /* Allow wrapping if needed */
+        }
+
+        .topic-actions button {
+            flex: 1 1 auto;
+            min-width: 0; /* Allow shrinking below content size */
+            white-space: normal; /* Allow text wrapping */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            text-align: center;
+            padding: 10px 8px; /* Reduced horizontal padding */
+            font-size: 0.85rem;
+            line-height: 1.3;
+        }
+
+        /* Topic card overflow fix */
+        .topic-card {
+            overflow: visible; /* Change from hidden to visible */
+            min-height: auto;
+        }
+
+        @media (max-width: 768px) {
+            .topic-card {
+                margin-bottom: 15px;
+                width: 100%;
+                box-sizing: border-box;
+                padding: 15px;
+                overflow: visible; /* Ensure content isn't clipped */
+            }
+            
+            .topic-actions {
+                flex-direction: column;
+                gap: 8px;
+                flex-wrap: nowrap; /* Single column, no wrap */
+            }
+            
+            .topic-actions button {
+                width: 100%;
+                box-sizing: border-box;
+                white-space: normal;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                text-align: center;
+                min-height: 44px; /* Touch-friendly */
+                padding: 10px 8px;
+                font-size: 0.8rem;
+                line-height: 1.3;
+            }
+            
+            /* Ensure topic content doesn't overflow */
+            .topic-content {
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .topic-description {
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+        }
+
+        /* ===== 3. CHAT SECTION - COMPLETE FIX ===== */
+        @media (max-width: 768px) {
+            .chat-section-container {
+                width: 100%;
+                height: 100%;
+                border-radius: 0;
+                padding: 1rem;
+                max-height: none;
+                box-sizing: border-box;
+                overflow: visible; /* Ensure content isn't clipped */
+                position: relative;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .chat-interaction-area {
+                height: 100%;
+                padding-bottom: 65px;
+                display: flex;
+                flex-direction: column;
+                overflow: visible; /* Change from hidden */
+                min-height: 0;
+                flex: 1;
+            }
+            
+            .chat-messages {
+                flex: 1;
+                overflow-y: auto;
+                overflow-x: hidden;
+                padding-bottom: 10px;
+                min-height: 0;
+                -webkit-overflow-scrolling: touch;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .chat-input-area {
+                padding-bottom: env(safe-area-inset-bottom);
+                padding: 15px;
+                margin: 0; /* Remove negative margins */
+                position: relative;
+                z-index: 10;
+                background: rgba(0, 0, 0, 0.1);
+                flex-shrink: 0;
+                width: 100%;
+                box-sizing: border-box;
+                border-top: 1px solid var(--border-color);
+            }
+            
+            #chatInput {
+                padding: 12px 15px;
+                font-size: 0.95rem;
+                width: 100%;
+                box-sizing: border-box;
+                min-width: 0;
+            }
+            
+            .chat-input-controls {
+                flex-wrap: wrap;
+                gap: 8px;
+                flex-shrink: 0;
+            }
+            
+            .chat-input-controls button {
+                width: 40px;
+                height: 40px;
+                font-size: 0.85rem;
+                flex-shrink: 0;
+                min-width: 40px;
+            }
+            
+            .send-btn {
+                width: 48px !important;
+                height: 48px !important;
+                min-width: 48px;
+            }
+            
+            /* Message bubbles responsive */
+            .message-bubble .content {
+                max-width: 85%; /* Slightly more on mobile */
+                padding: 12px 16px;
+                font-size: 0.9rem;
+            }
+            
+            /* Section control button */
+            .section-control-btn {
+                width: 32px !important;
+                height: 32px !important;
+                font-size: 0.85rem !important;
+                top: 10px !important;
+                right: 10px !important;
+            }
+        }
+
+        /* ===== 4. TOOL CARDS FIXES ===== */
+        @media (max-width: 768px) {
+            .tool-card {
+                padding: 20px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .tool-icon {
+                font-size: 2rem;
+            }
+            
+            .tool-title {
+                font-size: 1rem;
+                word-wrap: break-word;
+            }
+            
+            .tool-description {
+                font-size: 0.8rem;
+                word-wrap: break-word;
+                line-height: 1.5;
+            }
+            
+            .tool-action-btn {
+                width: 100%;
+                box-sizing: border-box;
+                white-space: normal;
+                word-wrap: break-word;
+                padding: 10px 12px;
+            }
+        }
+
+        /* ===== 5. NEWS CARDS & FILTERS ===== */
+        @media (max-width: 768px) {
+            .news-container {
+                width: 100%;
+                padding: 15px;
+                box-sizing: border-box;
+            }
+            
+            .news-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+                padding: 0 10px;
+            }
+            
+            .news-header h2 {
+                font-size: 1.3rem;
+                width: 100%;
+            }
+            
+            .news-filters {
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 0 10px;
+            }
+            
+            .news-filter-btn {
+                padding: 8px 12px !important;
+                font-size: 0.8rem !important;
+                white-space: nowrap;
+                flex: 1 1 auto;
+                min-width: 0;
+            }
+            
+            /* News feed grid */
+            #news-feed {
+                grid-template-columns: 1fr !important;
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            /* News cards (if dynamically created) */
+            .news-card {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 15px;
+            }
+        }
+
+        /* ===== 6. MODAL FIXES ===== */
+        @media (max-width: 768px) {
+            .modal {
+                padding: 10px;
+                align-items: flex-start;
+                padding-top: 20px;
+            }
+            
+            .modal-content {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 20px 15px !important;
+                max-height: 90vh !important;
+                margin: 0;
+                border-radius: 20px 20px 0 0;
+                box-sizing: border-box;
+            }
+            
+            .close-button {
+                top: 10px;
+                right: 15px;
+                width: 36px;
+                height: 36px;
+                font-size: 28px;
+            }
+            
+            .modal-content h2 {
+                font-size: 1.3rem;
+                word-wrap: break-word;
+            }
+            
+            #event-modal-title {
+                font-size: 1.2rem;
+                word-wrap: break-word;
+            }
+            
+            .event-actions,
+            .day-actions {
+                gap: 10px;
+            }
+            
+            .event-actions button,
+            .day-actions button {
+                padding: 12px 15px;
+                font-size: 0.9rem;
+                white-space: normal;
+                word-wrap: break-word;
+                text-align: center;
+            }
+            
+            .modal-pills-container {
+                gap: 8px;
+            }
+            
+            .modal-topic-pill {
+                font-size: 0.85rem;
+                padding: 7px 12px;
+                white-space: normal;
+                word-wrap: break-word;
+            }
+            
+            #meetings-modal-list .meeting-item {
+                padding: 15px;
+                margin-bottom: 10px;
+            }
+            
+            #meetings-modal-list .meeting-title {
+                font-size: 0.95rem;
+                word-wrap: break-word;
+            }
+            
+            #day-meetings-list {
+                max-height: calc(90vh - 200px) !important;
+                padding-right: 5px;
+            }
+        }
+
+        /* ===== 7. AGENDA/CALENDAR FIXES ===== */
+        @media (max-width: 768px) {
+            .agenda-container {
+                width: 100%;
+                padding: 10px;
+                box-sizing: border-box;
+                max-height: none;
+                border-radius: 0;
+                overflow: hidden;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .agenda-header {
+                padding-bottom: 15px;
+                margin-bottom: 15px;
+                flex-shrink: 0;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .agenda-header h2 {
+                font-size: 1.3rem;
+                width: 100%;
+                text-align: center;
+            }
+            
+            .calendar-nav-container {
+                width: 100%;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+            
+            .nav-buttons-group {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .calendar-nav-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 0.8rem;
+            }
+            
+            .view-toggle {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .view-toggle button,
+            .mobile-view-btn {
+                font-size: 0.85rem;
+                padding: 8px 12px;
+                min-width: 0;
+                flex: 1 1 auto;
+            }
+        }
+
+        /* ===== 8. SUMMARY SECTION ===== */
+        @media (max-width: 768px) {
+            .summary-section {
+                display: none;
+            }
+        }
+
+        /* ===== 9. PERSONA DISPLAY (Agent Selector) ===== */
+        @media (max-width: 768px) {
+            .persona-display {
+                max-height: 50vh;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .agent-selection-list {
+                max-height: calc(50vh - 150px);
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        /* ===== 10. GENERAL LAYOUT FIXES ===== */
+        @media (max-width: 768px) {
+            /* All pages should be scrollable */
+            #topics-page,
+            #agenda-page,
+            #tools-page,
+            #news-page,
+            #templates-page,
+            .placeholder-page {
+                padding: 0;
+                width: 100%;
+                box-sizing: border-box;
+                overflow-y: auto;
+                overflow-x: hidden;
+                height: 100%;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            /* Topics container */
+            .topics-container {
+                padding: 15px;
+                grid-template-columns: 1fr;
+                height: auto;
+                width: 100%;
+                box-sizing: border-box;
+                gap: 15px;
+            }
+            
+            /* Tools container */
+            .tools-container {
+                padding: 15px;
+                grid-template-columns: 1fr;
+                height: auto;
+                width: 100%;
+                box-sizing: border-box;
+                gap: 15px;
+            }
+            
+            /* Placeholder pages */
+            .placeholder-page {
+                padding: 30px 20px;
+                text-align: center;
+            }
+            
+            .placeholder-page h2 {
+                font-size: 1.5rem;
+                word-wrap: break-word;
+            }
+            
+            .placeholder-page p {
+                font-size: 1rem;
+                word-wrap: break-word;
+            }
+        }
+
+        /* ===== 11. VERY SMALL SCREENS (480px and below) ===== */
+        @media (max-width: 480px) {
+            .header {
+                padding: 10px 12px;
+            }
+            
+            .logo-container {
+                width: 50px;
+                height: 40px;
+            }
+            
+            .header-right .user-profile img {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .mobile-menu-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+            
+            .nav-tabs button {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .topic-card {
+                padding: 12px;
+            }
+            
+            .topic-actions button {
+                font-size: 0.75rem;
+                padding: 8px 6px;
+                min-height: 40px;
+            }
+            
+            .chat-section-container {
+                padding: 0.75rem;
+            }
+            
+            .chat-input-area {
+                padding: 12px 10px;
+            }
+            
+            #chatInput {
+                font-size: 0.9rem;
+                padding: 10px 12px;
+            }
+            
+            .chat-input-controls {
+                gap: 6px;
+            }
+            
+            .chat-input-controls button {
+                width: 36px;
+                height: 36px;
+                font-size: 0.8rem;
+            }
+            
+            .send-btn {
+                width: 44px !important;
+                height: 44px !important;
+            }
+            
+            .message-bubble .content {
+                max-width: 90%;
+                padding: 10px 14px;
+                font-size: 0.85rem;
+            }
+            
+            .tool-card {
+                padding: 15px;
+            }
+            
+            .tool-icon {
+                font-size: 1.8rem;
+            }
+            
+            .tool-title {
+                font-size: 0.95rem;
+            }
+            
+            .tool-description {
+                font-size: 0.75rem;
+            }
+            
+            .modal-content {
+                padding: 15px 12px !important;
+                max-height: 95vh !important;
+            }
+            
+            .modal-content h2 {
+                font-size: 1.2rem;
+            }
+            
+            .agenda-header h2 {
+                font-size: 1.2rem;
+            }
+            
+            .calendar-nav-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 0.75rem;
+            }
+            
+            .view-toggle button,
+            .mobile-view-btn {
+                font-size: 0.8rem;
+                padding: 6px 10px;
+            }
+            
+            #mobile-month-grid .day-cell {
+                width: 35px;
+                height: 35px;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* ===== 12. TABLET/LANDSCAPE ORIENTATION ===== */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .page-content {
+                padding: 20px 25px;
+            }
+            
+            .chat-section-container {
+                padding: 30px 0px 0px 15px;
+            }
+            
+            .persona-display {
+                flex: 0 0 250px;
+            }
+            
+            .topic-actions button {
+                font-size: 0.8rem;
+                padding: 9px 10px;
+            }
+            
+            .tools-container {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
+
+        /* ===== 13. TEXT OVERFLOW FIXES (All Screens) ===== */
+        /* Ensure all text elements can wrap */
+        h1, h2, h3, h4, h5, h6,
+        .topic-title,
+        .tool-title,
+        .event-title,
+        .meeting-title,
+        .agent-select-name,
+        .single-agent-name {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+        }
+
+        p, span, div,
+        .topic-description,
+        .tool-description,
+        .event-details,
+        .single-agent-description {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* ===== 14. FIX FOR FIXED POSITION ELEMENTS ===== */
+        @media (max-width: 768px) {
+            /* Ensure fixed elements don't cause horizontal scroll */
+            .persona-display {
+                left: 0;
+                right: 0;
+                width: 100%;
+                max-width: 100%;
+            }
+            
+            .nav-tabs-container {
+                left: 0;
+                right: 0;
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
+        /* ===== 15. SCROLLBAR FIXES ===== */
+        @media (max-width: 768px) {
+            /* Ensure scrollbars don't take up space */
+            .chat-messages,
+            .agent-selection-list,
+            #mobile-agenda-events,
+            .modal-content {
+                scrollbar-width: thin;
+                scrollbar-color: var(--primary-blue) rgba(255, 255, 255, 0.1);
+            }
+            
+            .chat-messages::-webkit-scrollbar,
+            .agent-selection-list::-webkit-scrollbar,
+            #mobile-agenda-events::-webkit-scrollbar {
+                width: 6px;
+            }
+        }
+
+        /* ===== 16. IMAGE RESPONSIVENESS ===== */
+        img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .logo-container img,
+        .agent-mini-avatar,
+        .single-agent-avatar,
+        .persona-option img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* ===== 17. BUTTON TOUCH TARGETS ===== */
+        @media (max-width: 768px) {
+            /* Ensure all buttons are touch-friendly */
+            button,
+            .nav-tabs button,
+            .topic-actions button,
+            .tool-action-btn,
+            .calendar-nav-btn,
+            .mobile-view-btn,
+            .close-button,
+            .event-actions button,
+            .day-actions button {
+                min-height: 44px; /* iOS recommended minimum */
+                min-width: 44px;
+            }
+            
+            /* Small icon buttons exception */
+            .calendar-nav-btn,
+            .chat-input-controls button:not(.send-btn) {
+                min-width: 36px;
+                min-height: 36px;
+            }
+        }
+
+        /* ===== 18. PREVENT HORIZONTAL SCROLL ===== */
+        * {
+            max-width: 100%;
+        }
+
+        body, html {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                overflow-x: hidden;
+            }
+            
+            .main-container,
+            .page-content,
+            .chat-section-container,
+            .agenda-container,
+            .topics-container,
+            .tools-container {
+                overflow-x: hidden;
+                max-width: 100vw;
             }
         }
     </style>
