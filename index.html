@@ -359,6 +359,9 @@
             backdrop-filter: blur(20px);*/
             min-height: 0;
             max-height: calc(100vh - 220px);
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-gutter: stable;
         }
 
         /* Removed old single persona image styles - now using multi-agent selection */
@@ -539,12 +542,14 @@
         }
         
         .agent-selection-list {
-            display: flex;
+            display: flex !important;
             flex-direction: column;
             gap: 10px;
             flex: 1;
             min-height: 0;
             padding: 5px 0;
+            width: calc(100% - 6px);
+            
         }
         
         .agent-selection-list::-webkit-scrollbar {
@@ -561,6 +566,20 @@
             border-radius: 10px;
         }
         
+        .persona-display::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .persona-display::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .persona-display::-webkit-scrollbar-thumb {
+            background: var(--primary-orange);
+            border-radius: 10px;
+        }
+        
         .agent-select-item {
             display: flex;
             align-items: center;
@@ -571,6 +590,9 @@
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
+            box-sizing: border-box;
+            max-width: calc(100% - 8px);
+            width: 100%;
         }
         
         .agent-select-item::before {
@@ -593,7 +615,8 @@
         
         .agent-select-item:hover {
             border-color: rgba(0, 169, 157, 0.3);
-            transform: translateX(3px);
+            transform: translateX(2px);
+            max-width: calc(100% - 3px);
         }
         
         .agent-select-item.selected {
@@ -4053,6 +4076,7 @@
                 <div class="event" data-event-title="Community Empowerment Progress Review" data-event-time="02:30 PM" data-event-details="Review the December activation of community empowerment grants and assess beneficiary readiness metrics." data-topic="empowerment" data-date="2025-12-05"></div>
                 <div class="event" data-event-title="Non-Profit Impact Forum" data-event-time="11:00 AM" data-event-details="Roundtable with leading NGOs to align 2026 funding cycles and performance indicators." data-topic="non-profit" data-date="2025-12-07"></div>
                 <div class="event" data-event-title="Global Partnership Council" data-event-time="03:30 PM" data-event-details="Strategic partnership council to finalize cross-border collaborations for 2026 initiatives." data-topic="strategic-partnerships" data-date="2025-12-09"></div>
+                
             </div>
         </div>
 
@@ -5332,7 +5356,7 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
             
             // Special function for orchestration requests (no display, just return response)
             async function sendOrchestrationRequest(prompt, retries = 2) {
-                const apiKey = "AIzaSyAjp8CltKCJXv7OXhZ6GIArcO_1DhUO_gs";
+                const apiKey = "AIzaSyBYZ7rmOfPXDZaJAcCq62QqPA1CXftXFFs";
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
                 const payload = {
@@ -5372,7 +5396,7 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
             }
             
             async function sendMessageToAgent(message, agentId, retries = 3, delay = 1000) {
-                const apiKey = "AIzaSyAjp8CltKCJXv7OXhZ6GIArcO_1DhUO_gs";
+                const apiKey = "AIzaSyBYZ7rmOfPXDZaJAcCq62QqPA1CXftXFFs";
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
                 const persona = personaData.find(p => p.id === agentId);
@@ -5530,7 +5554,7 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
             
             // New function for agent discussion with separate context
             async function sendMessageToAgentDiscussion(prompt, agentId, previousContext = [], retries = 3, delay = 1000) {
-                const apiKey = "AIzaSyAjp8CltKCJXv7OXhZ6GIArcO_1DhUO_gs";
+                const apiKey = "AIzaSyBYZ7rmOfPXDZaJAcCq62QqPA1CXftXFFs";
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
                 const persona = personaData.find(p => p.id === agentId);
@@ -6477,7 +6501,7 @@ RESPOND ONLY WITH VALID JSON. NO OTHER TEXT.`;
             const RSS_CACHE_DURATION = 30 * 60 * 1000; // 30 minutes (increased to reduce API calls)
             
             async function fetchNewsForTopic(topicId, usedArticleUrls = []) {
-                const geminiApiKey = "AIzaSyAjp8CltKCJXv7OXhZ6GIArcO_1DhUO_gs";
+                const geminiApiKey = "AIzaSyBYZ7rmOfPXDZaJAcCq62QqPA1CXftXFFs";
                 const topicName = topicMapping[topicId] || 'HRSD initiatives';
                 
                 try {
